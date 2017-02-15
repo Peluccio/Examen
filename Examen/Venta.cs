@@ -106,5 +106,18 @@ namespace Examen
         {
 
         }
+
+
+        //Operaciones ##############################
+        public double venta()
+        {
+            double precio = 0;
+            double cantidad = 0;
+            double total = 0;
+            total = precio * cantidad;
+
+            return total;
+        }
+
     }
 }

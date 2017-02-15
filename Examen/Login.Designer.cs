@@ -54,6 +54,7 @@
             this.btnIngresar.TabIndex = 1;
             this.btnIngresar.Text = "Ingresar";
             this.btnIngresar.UseVisualStyleBackColor = true;
+            this.btnIngresar.Click += new System.EventHandler(this.btnIngresar_Click);
             // 
             // label2
             // 
@@ -79,7 +80,6 @@
             this.textBoxContrasenia.Name = "textBoxContrasenia";
             this.textBoxContrasenia.Size = new System.Drawing.Size(250, 20);
             this.textBoxContrasenia.TabIndex = 4;
-            this.textBoxContrasenia.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // textBoxUsuario
             // 
@@ -96,6 +96,7 @@
             this.btnSalir.TabIndex = 6;
             this.btnSalir.Text = "Salir";
             this.btnSalir.UseVisualStyleBackColor = true;
+            this.btnSalir.Click += new System.EventHandler(this.btnSalir_Click);
             // 
             // Login
             // 
@@ -110,6 +111,7 @@
             this.Controls.Add(this.btnIngresar);
             this.Controls.Add(this.label1);
             this.Name = "Login";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login";
             this.ResumeLayout(false);
             this.PerformLayout();
