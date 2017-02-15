@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +10,9 @@ namespace Examen
 {
     class Producto
     {
+        // Objeto para conexión
+        DataBase db = new DataBase();
+
         private int id;
         private String nombre;
         private String descripcion;
@@ -18,15 +23,37 @@ namespace Examen
          */
         public Boolean findById(int id)
         {
-            return false;
+            try
+            {
+                SqlDataReader rows;
+                string query = "SELECT * FROM producto WHERE producto_id = " + id;
+                rows = db.execute(query);
+
+                if(rows.Read())
+                {
+                    this.id = rows.GetInt32(0);
+                    this.nombre = rows.GetString(1).ToString();
+                    this.descripcion = rows.GetString(2).ToString();
+                    this.precio = rows.GetFloat(3);
+                }
+
+                rows.Close();
+                DataBase.conexion.Close();
+                return true;
+            } catch(Exception)
+            {
+                return false;
+            }
         }
 
         /*
          * Retorna una lista de Productos
          */
-        public void findAll()
+        public DataSet findAll()
         {
-
+            DataSet list = new DataSet();
+            list = db.getList("SELECT * FROM producto", "producto");
+            return list; 
         }
 
         /*
@@ -34,7 +61,19 @@ namespace Examen
          */
         public Boolean create()
         {
-            return false;
+            try
+            {
+                SqlDataReader rows;
+                string query = "INSERT INTO producto (producto_nombre, producto_descripcion, producto_precio) VALUES ("+this.nombre+", "+this.descripcion+", "+this.precio+")";
+                rows = db.execute(query);
+                rows.Close();
+                DataBase.conexion.Close();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         /*
