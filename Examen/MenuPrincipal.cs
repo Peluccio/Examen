@@ -22,6 +22,9 @@ namespace Examen
             textBoxIva.Enabled = false;
             textBoxTotal.Enabled = false;
             textBoxCambio.Enabled = false;
+            textBoxProducto.Enabled = false;
+           
+
         }
 
         private void button9_Click(object sender, EventArgs e)
@@ -38,6 +41,7 @@ namespace Examen
             textBoxSubtotal.Clear();
             textBoxIva.Clear();
             textBoxTotal.Clear();
+            textBoxProducto.Clear();
             textBoxCantidad.Focus();
 
             /*DataSet datos = new DataSet();
@@ -105,6 +109,7 @@ namespace Examen
             
             textBoxTotal.Text = Convert.ToDouble(total).ToString();
             textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
+            
         }
 
         public DataSet buscarProducto(string consulta, string tabla)
@@ -153,12 +158,13 @@ namespace Examen
             try
             {
                 DataSet ds = new DataSet();
-                ds = buscarProducto("SELECT producto_precio FROM producto WHERE producto_nombre ='" + comboBoxProducto.Text + "'", "producto" );
+                ds = buscarProducto("SELECT producto_precio, producto_nombre FROM producto WHERE producto_nombre ='" + comboBoxProducto.Text + "'", "producto" );
 
                 foreach (DataRow row in ds.Tables["producto"].Rows)
                 {
                     textBoxPrecio.Text = row["producto_precio"].ToString();
-             
+                    textBoxProducto.Text = row["producto_nombre"].ToString();
+
                 }
 
             }
@@ -170,6 +176,36 @@ namespace Examen
             {
                 DataBase.conexion.Close();
             }
+        }
+
+        private void btnImprimir_Click(object sender, EventArgs e)
+        {
+            DataTable dt = new DataTable(); //creas una tabla
+            dt.Columns.Add("Producto"); //le creas las columnas
+            dt.Columns.Add("Precio");
+            dt.Columns.Add("Subtotal");
+            dt.Columns.Add("IVA");
+            dt.Columns.Add("Total");
+            
+            DataRow row = dt.NewRow(); //creas un registro
+            row["Producto"] = "* " + textBoxProducto.Text; //Le añadres un valor
+            row["Precio"] = "$ " + textBoxPrecio.Text;
+            dt.Rows.Add(row); //añades el registro a la tabla
+            dataGridView1.DataSource = dt; //añades la tabla al datagrid
+            dataGridView1.Update(); //actualizas 
+
+            for (int i = 0; i < 10; i++)
+            {
+            
+            }
+
+
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+          
         }
 
 
@@ -191,5 +227,9 @@ namespace Examen
         } */
 
 
+
+
+
+
     }
-}
+    }

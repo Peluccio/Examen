@@ -32,7 +32,6 @@
             this.btnVenta = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.btn10 = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnLimpiar = new System.Windows.Forms.Button();
             this.btnSalir = new System.Windows.Forms.Button();
             this.btnImprimir = new System.Windows.Forms.Button();
@@ -61,18 +60,23 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.btnAgregar = new System.Windows.Forms.Button();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.textBoxProducto = new System.Windows.Forms.TextBox();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.textBoxProducto);
+            this.tabPage3.Controls.Add(this.dataGridView1);
+            this.tabPage3.Controls.Add(this.btnAgregar);
             this.tabPage3.Controls.Add(this.btnVenta);
             this.tabPage3.Controls.Add(this.label9);
             this.tabPage3.Controls.Add(this.btn10);
-            this.tabPage3.Controls.Add(this.dataGridView1);
             this.tabPage3.Controls.Add(this.btnLimpiar);
             this.tabPage3.Controls.Add(this.btnSalir);
             this.tabPage3.Controls.Add(this.btnImprimir);
@@ -134,17 +138,9 @@
             this.btn10.UseVisualStyleBackColor = true;
             this.btn10.Click += new System.EventHandler(this.button9_Click);
             // 
-            // dataGridView1
-            // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(314, 241);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(420, 150);
-            this.dataGridView1.TabIndex = 24;
-            // 
             // btnLimpiar
             // 
-            this.btnLimpiar.Location = new System.Drawing.Point(128, 325);
+            this.btnLimpiar.Location = new System.Drawing.Point(22, 368);
             this.btnLimpiar.Name = "btnLimpiar";
             this.btnLimpiar.Size = new System.Drawing.Size(100, 23);
             this.btnLimpiar.TabIndex = 23;
@@ -170,6 +166,7 @@
             this.btnImprimir.TabIndex = 21;
             this.btnImprimir.Text = "Imprimir";
             this.btnImprimir.UseVisualStyleBackColor = true;
+            this.btnImprimir.Click += new System.EventHandler(this.btnImprimir_Click);
             // 
             // btn20
             // 
@@ -231,14 +228,14 @@
             // 
             // textBoxCambio
             // 
-            this.textBoxCambio.Location = new System.Drawing.Point(397, 164);
+            this.textBoxCambio.Location = new System.Drawing.Point(397, 157);
             this.textBoxCambio.Name = "textBoxCambio";
             this.textBoxCambio.Size = new System.Drawing.Size(100, 20);
             this.textBoxCambio.TabIndex = 13;
             // 
             // textBoxEfectivo
             // 
-            this.textBoxEfectivo.Location = new System.Drawing.Point(397, 122);
+            this.textBoxEfectivo.Location = new System.Drawing.Point(397, 115);
             this.textBoxEfectivo.Name = "textBoxEfectivo";
             this.textBoxEfectivo.Size = new System.Drawing.Size(100, 20);
             this.textBoxEfectivo.TabIndex = 12;
@@ -281,7 +278,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(331, 171);
+            this.label8.Location = new System.Drawing.Point(331, 164);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(60, 13);
             this.label8.TabIndex = 8;
@@ -317,7 +314,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(300, 129);
+            this.label4.Location = new System.Drawing.Point(300, 122);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(91, 13);
             this.label4.TabIndex = 4;
@@ -344,11 +341,11 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(341, 3);
+            this.label1.Location = new System.Drawing.Point(362, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 13);
+            this.label1.Size = new System.Drawing.Size(29, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Seleccione";
+            this.label1.Text = "Pan:";
             // 
             // btn200
             // 
@@ -390,6 +387,31 @@
             this.tabControl1.Size = new System.Drawing.Size(773, 430);
             this.tabControl1.TabIndex = 0;
             // 
+            // btnAgregar
+            // 
+            this.btnAgregar.Location = new System.Drawing.Point(128, 325);
+            this.btnAgregar.Name = "btnAgregar";
+            this.btnAgregar.Size = new System.Drawing.Size(100, 23);
+            this.btnAgregar.TabIndex = 28;
+            this.btnAgregar.Text = "Agregar";
+            this.btnAgregar.UseVisualStyleBackColor = true;
+            this.btnAgregar.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(314, 241);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(420, 150);
+            this.dataGridView1.TabIndex = 29;
+            // 
+            // textBoxProducto
+            // 
+            this.textBoxProducto.Location = new System.Drawing.Point(397, 3);
+            this.textBoxProducto.Name = "textBoxProducto";
+            this.textBoxProducto.Size = new System.Drawing.Size(100, 20);
+            this.textBoxProducto.TabIndex = 30;
+            // 
             // MenuPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -401,9 +423,9 @@
             this.Text = "MenuPrincipal";
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -439,9 +461,11 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btn200;
-        private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button btn10;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button btnVenta;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button btnAgregar;
+        private System.Windows.Forms.TextBox textBoxProducto;
     }
 }
