@@ -48,7 +48,7 @@
             this.textBoxCantidad = new System.Windows.Forms.TextBox();
             this.textBoxPrecio = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBoxProducto = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -260,7 +260,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.comboBox1);
+            this.groupBox1.Controls.Add(this.comboBoxProducto);
             this.groupBox1.Location = new System.Drawing.Point(76, 35);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(200, 100);
@@ -268,13 +268,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Producto:";
             // 
-            // comboBox1
+            // comboBoxProducto
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(6, 19);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(183, 21);
-            this.comboBox1.TabIndex = 0;
+            this.comboBoxProducto.FormattingEnabled = true;
+            this.comboBoxProducto.Location = new System.Drawing.Point(6, 19);
+            this.comboBoxProducto.Name = "comboBoxProducto";
+            this.comboBoxProducto.Size = new System.Drawing.Size(183, 21);
+            this.comboBoxProducto.TabIndex = 0;
+            this.comboBoxProducto.SelectedIndexChanged += new System.EventHandler(this.comboBoxProducto_SelectedIndexChanged);
+            this.comboBoxProducto.Click += new System.EventHandler(this.comboBoxProducto_Click);
             // 
             // label8
             // 
@@ -427,7 +429,7 @@
         private System.Windows.Forms.TextBox textBoxCantidad;
         private System.Windows.Forms.TextBox textBoxPrecio;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBoxProducto;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;

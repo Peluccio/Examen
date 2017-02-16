@@ -18,6 +18,7 @@ namespace Examen
         private String descripcion;
         private float precio;
 
+
         /*
          * Encuentra a un producto por su ID
          */
@@ -55,6 +56,7 @@ namespace Examen
             list = db.getList("SELECT * FROM producto", "producto");
             return list; 
         }
+        
 
         /*
          * Crea un nuevo registro
