@@ -38,6 +38,7 @@ namespace Examen
             textBoxSubtotal.Clear();
             textBoxIva.Clear();
             textBoxTotal.Clear();
+            textBoxCantidad.Focus();
 
             /*DataSet datos = new DataSet();
             ConsultaTabla("producto", "producto_id");
