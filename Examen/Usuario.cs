@@ -15,7 +15,7 @@ namespace Examen
         private int id;
         private String nombre;
         private String apellidos;
-        private string contrasena;
+        private String contrasena;
         private String rfc;
         private String direccion;
         private String ciudad;

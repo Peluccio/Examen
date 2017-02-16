@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +10,9 @@ namespace Examen
 {
     class Venta
     {
+        DataBase db = new DataBase();
+        int res = -1;
+
         private int id;
         private String fecha_hora;
         private float subtotal;
@@ -19,7 +24,29 @@ namespace Examen
          */
         public Boolean findById(int id)
         {
-            return false;
+            try
+            {
+                SqlDataReader rows;
+                string query = "SELECT * FROM venta WHERE venta_id = " + id;
+                rows = db.execute(query);
+
+                if (rows.Read())
+                {
+                    this.id = rows.GetInt32(0);
+                    this.subtotal = rows.GetFloat(1);
+                    this.total = rows.GetFloat(2);
+                    this.usuario_id = rows.GetInt32(3);
+                    this.fecha_hora = rows.GetString(4).ToString();
+                }
+
+                rows.Close();
+                DataBase.conexion.Close();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         /*
@@ -52,6 +79,31 @@ namespace Examen
         public Boolean delete(int id)
         {
             return false;
+        }
+
+        /*
+         * Agrega el producto a la venta
+         */
+        public Boolean addProduct(int producto_id)
+        {
+            try
+            {
+                string query = "INSERT INTO venta_producto VALUES (" + this.id + ", "
+                    + producto_id + ", 1)";
+
+                res = db.executeNonQuery(query);
+
+                if (res == 1) return true;
+                else return false;
+            }
+            catch (SqlException ex)
+            {
+                return false;
+            }
+            finally
+            {
+                DataBase.conexion.Close();
+            }
         }
 
         public int getId()
@@ -102,9 +154,11 @@ namespace Examen
         /*
          * ACTIVE RECORD
          */
-         public void productos()
+         public DataSet productos()
         {
-
+            DataSet list = new DataSet();
+            list = db.getList("SELECT * FROM lista_productos WHERE venta_id = " + this.id, "lista_productos");
+            return list;
         }
 
 
