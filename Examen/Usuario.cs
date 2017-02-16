@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,9 +9,13 @@ namespace Examen
 {
     class Usuario
     {
+        // Objeto para conexión
+        DataBase db = new DataBase();
+
         private int id;
         private String nombre;
         private String apellidos;
+        private string contrasena;
         private String rfc;
         private String direccion;
         private String ciudad;
@@ -20,9 +25,35 @@ namespace Examen
         /*
          * Encuentra a un usuario por su ID
          */
-        public Boolean findById(int id)
+        public Boolean findByIdPass(int id, string pass)
         {
-            return false;
+            try
+            {
+                SqlDataReader rows;
+                string query = "SELECT * FROM usuario WHERE usuario_id = " + id + " AND usuario_contrasena = " + pass;
+                rows = db.execute(query);
+
+                if (rows.Read())
+                {
+                    this.id = rows.GetInt32(0);
+                    this.nombre = rows.GetString(1).ToString();
+                    this.apellidos = rows.GetString(2).ToString();
+                    this.rfc = rows.GetString(3).ToString();
+                    this.direccion = rows.GetString(4).ToString();
+                    this.ciudad = rows.GetString(5).ToString();
+                    this.telefono = rows.GetString(6).ToString();
+                    this.tipo = rows.GetString(7).ToString();
+                    this.contrasena = rows.GetString(8).ToString();
+                }
+
+                rows.Close();
+                DataBase.conexion.Close();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         /*
@@ -125,6 +156,16 @@ namespace Examen
         public String getTipo()
         {
             return this.tipo;
+        }
+
+        public String getContrasena()
+        {
+            return this.contrasena;
+        }
+
+        public void setContrasena()
+        {
+            this.contrasena = contrasena;
         }
 
 

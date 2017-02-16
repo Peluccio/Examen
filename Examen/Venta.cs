@@ -9,7 +9,7 @@ namespace Examen
     class Venta
     {
         private int id;
-        private String fecha;
+        private String fecha_hora;
         private float subtotal;
         private float total;
         private int usuario_id;
@@ -59,14 +59,14 @@ namespace Examen
             return this.id;
         }
 
-        public String getFecha()
+        public String getFechaHora()
         {
-            return this.fecha;
+            return this.fecha_hora;
         }
 
-        public void setFecha(string fecha)
+        public void setFecha(string fecha_hora)
         {
-            this.fecha = fecha;
+            this.fecha_hora = fecha_hora;
         }
 
         public float getSubtotal()
