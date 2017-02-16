@@ -22,6 +22,16 @@ namespace Examen
             return reader;
         }
 
+        public int executeNonQuery(string query)
+        {
+            int respuesta = 1;
+            SqlCommand comando = new SqlCommand(query, conexion);
+            conexion.Open();
+            respuesta = comando.ExecuteNonQuery();
+            conexion.Close();
+            return respuesta;
+        }
+
         public DataSet getList(string query, string table)
         {
             DataSet list = new DataSet();
