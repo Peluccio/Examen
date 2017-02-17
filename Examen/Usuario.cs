@@ -30,7 +30,7 @@ namespace Examen
             try
             {
                 SqlDataReader rows;
-                string query = "SELECT * FROM usuario WHERE usuario_id = " + id + " AND usuario_contrasena = " + pass;
+                string query = "SELECT * FROM usuario WHERE usuario_id = " + id + " AND usuario_contrasena = '" + pass + "'";
                 rows = db.execute(query);
 
                 if (rows.Read())
