@@ -179,6 +179,7 @@ namespace Examen
             int result = dataGridView1.Rows.Cast<DataGridViewRow>().Sum(x => Convert.ToInt32(x.Cells["Total"].Value));
             textBoxTotal.Text = Convert.ToDouble(result).ToString();
 
+
             textBoxPrecio.Clear();
             textBoxCantidad.Clear();
             textBoxEfectivo.Clear();

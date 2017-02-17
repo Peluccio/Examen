@@ -37,43 +37,7 @@ namespace Examen
 
         private void btnIngresar_Click(object sender, EventArgs e)
         {
-            errorUsuario.Clear();
-            errorContrasena.Clear();
-            /*
-            MenuPrincipal ventana = new MenuPrincipal();
-            ventana.ShowDialog();
-            Dispose();
-            */
-            if(textBoxUsuario.Text != "" || textBoxContrasenia.Text != "")
-            {
-                try
-                {
-                    int id = -1;
-                    Int32.TryParse(textBoxUsuario.Text, out id);
-
-                    Usuario usuario = new Usuario();
-                    usuario.findByIdPass(id, textBoxContrasenia.Text);
-                    if (usuario.getId() > 0)
-                    {
-                        MenuPrincipal ventana = new MenuPrincipal();
-                        ventana.ShowDialog();
-                        Dispose();
-                        this.Hide();
-                    }
-                    else
-                    {
-                        if (textBoxUsuario.Text == "" || textBoxContrasenia.Text == "") this.setErrorProviders();
-                        else MessageBox.Show("Usuario o contraseña incorrectos", "No existe el usuario", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-                catch (FormatException)
-                {
-                    MessageBox.Show("Usuario o contraseña incorrectos", "No existe el usuario", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            } else
-            {
-                this.setErrorProviders();
-            }
+            this.validarIngreso();
         }
 
         public void setErrorProviders()
@@ -84,6 +48,59 @@ namespace Examen
             if (textBoxContrasenia.Text == "")
                 errorContrasena.SetError(textBoxContrasenia, "Debe ingresar con su contraseña de usuario");
 
+        }
+
+        private void textBoxUsuario_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter) textBoxContrasenia.Focus();
+        }
+
+        private void textBoxContrasenia_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter) this.validarIngreso();
+        }
+
+        private void validarIngreso()
+        {
+            errorUsuario.Clear();
+            errorContrasena.Clear();
+
+            if (textBoxUsuario.Text != "" || textBoxContrasenia.Text != "")
+            {
+                //try
+                //{
+                int id = -1;
+                Int32.TryParse(textBoxUsuario.Text, out id);
+
+                Usuario usuario = new Usuario();
+                usuario.findByIdPass(id, textBoxContrasenia.Text);
+                if (usuario.getId() > 0)
+                {
+                    this.Hide();
+                    MenuPrincipal ventana = new MenuPrincipal();
+                    ventana.ShowDialog();
+                    Dispose();
+                }
+                else
+                {
+                    if (textBoxUsuario.Text == "" || textBoxContrasenia.Text == "") this.setErrorProviders();
+                    else MessageBox.Show("Usuario o contraseña incorrectos", "No existe el usuario", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                //}
+                //catch (FormatException)
+                //{
+                //    MessageBox.Show("Usuario o contraseña incorrectos", "No existe el usuario", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //}
+            }
+            else
+            {
+                this.setErrorProviders();
+            }
+        }
+
+        private void Login_Load(object sender, EventArgs e)
+        {
+            textBoxUsuario.Focus();
         }
     }
 }
