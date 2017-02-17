@@ -26,11 +26,10 @@ namespace Examen
            
 
         }
+        //Tabla para el gridView
+        DataTable dt = new DataTable(); 
 
-        private void button9_Click(object sender, EventArgs e)
-        {
-
-        }
+      
 
         private void button8_Click(object sender, EventArgs e)
         {
@@ -43,10 +42,7 @@ namespace Examen
             textBoxTotal.Clear();
             textBoxProducto.Clear();
             textBoxCantidad.Focus();
-
-            /*DataSet datos = new DataSet();
-            ConsultaTabla("producto", "producto_id");
-            dataGridView1.DataSource = datos.Tables["producto"];*/
+            
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -67,49 +63,6 @@ namespace Examen
                   MessageBoxButtons.OK, MessageBoxIcon.Information);
                 e.Handled = true;
             }
-        }
-
-        private void btnVenta_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                /*Venta operaciones = new Venta();
-                Producto operaciones = new Producto();
-
-                //operaciones.venta();
-                //operaciones.setCatetoAdyacente(Convert.ToDouble(textBoxCatetoAdyacente1.Text.ToString()));
-
-                double num1 = 0;
-                double num2 = 0;
-                double total = 0;
-
-                num1 = Double.Parse(textBoxPrecio.Text);
-                num2 = Double.Parse(textBoxCantidad.Text);
-
-                total = num1 * num2;
-                textBoxTotal.Text = Convert.ToDouble(total).ToString();
-               
-                //operaciones.setPrecio(Convert.ToDouble(textBoxPrecio.Text.ToString())); */
-            }
-            catch (Exception ex) { }
-        }
-
-        private void btn500_Click(object sender, EventArgs e)
-        {
-            double num1 = 0;
-            double num2 = 0;
-            double total = 0;
-            double cambio = 0;
-
-            num1 = Double.Parse(textBoxPrecio.Text);
-            num2 = Double.Parse(textBoxCantidad.Text);
-
-            total = num1 * num2;
-            cambio = 500 - total;
-            
-            textBoxTotal.Text = Convert.ToDouble(total).ToString();
-            textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
-            
         }
 
         public DataSet buscarProducto(string consulta, string tabla)
@@ -180,56 +133,227 @@ namespace Examen
 
         private void btnImprimir_Click(object sender, EventArgs e)
         {
-            DataTable dt = new DataTable(); //creas una tabla
-            dt.Columns.Add("Producto"); //le creas las columnas
-            dt.Columns.Add("Precio");
-            dt.Columns.Add("Subtotal");
-            dt.Columns.Add("IVA");
-            dt.Columns.Add("Total");
+           
             
-            DataRow row = dt.NewRow(); //creas un registro
-            row["Producto"] = "* " + textBoxProducto.Text; //Le añadres un valor
-            row["Precio"] = "$ " + textBoxPrecio.Text;
-            dt.Rows.Add(row); //añades el registro a la tabla
-            dataGridView1.DataSource = dt; //añades la tabla al datagrid
-            dataGridView1.Update(); //actualizas 
+        }
 
-            for (int i = 0; i < 10; i++)
+        private void btnVenta_Click(object sender, EventArgs e)
+        {
+            try
             {
-            
+                double num1 = 0;
+                double num2 = 0;
+                double total = 0;
+                double efectivo = 0;
+                double cambio = 0;
+                double subtotal = 0;
+
+
+                num1 = Double.Parse(textBoxPrecio.Text);
+                num2 = Double.Parse(textBoxCantidad.Text);
+                efectivo = Double.Parse(textBoxEfectivo.Text);
+
+                subtotal = num1 * num2;
+                total = subtotal * 1.16;
+                cambio = efectivo - total;
+
+                textBoxIva.Text = Convert.ToDouble(subtotal * 0.16).ToString();
+                textBoxSubtotal.Text = Convert.ToDouble(subtotal).ToString();
+                textBoxTotal.Text = Convert.ToDouble(total).ToString();
+                textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
             }
-
-
-
+            catch (Exception ex) { }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-          
+            DataRow row = dt.NewRow(); //Creas un regístro.
+            row["Producto"] = "* " + textBoxProducto.Text; //Se añade un valor.
+            row["Cantidad"] = "# " + textBoxCantidad.Text;
+            row["Precio"] = "$ " + textBoxPrecio.Text;
+            row["Total"] = "$ " + textBoxTotal.Text;
+            dt.Rows.Add(row); //Se añade el registro a la tabla.
+            dataGridView1.DataSource = dt; //Se añade la tabla al datagrid.            
+            dataGridView1.Update(); //Se actualiza.  
+
+            int result = dataGridView1.Rows.Cast<DataGridViewRow>().Sum(x => Convert.ToInt32(x.Cells["Total"].Value));
+            textBoxTotal.Text = Convert.ToDouble(result).ToString();
+
+            textBoxPrecio.Clear();
+            textBoxCantidad.Clear();
+            textBoxEfectivo.Clear();
+            textBoxCambio.Clear();
+            textBoxSubtotal.Clear();
+            textBoxIva.Clear();            
+            textBoxProducto.Clear();
+            textBoxCantidad.Focus();
         }
 
-
-
-        /*Método que ejecutará la consulta de los registros de una tabla.
-        public DataSet ConsultaTabla(string cliente, string codigo_cli)
+        private void MenuPrincipal_Load(object sender, EventArgs e)
         {
-            DataSet dS = new DataSet();
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            string consulta = "SELECT * FROM " + cliente + " ORDER BY " + codigo_cli + " ASC";
-            
-            SqlCommand command = new SqlCommand(consulta, DataBase.conexion);
-            adapter.SelectCommand = command;
-            DataBase.conexion.Open();
-            adapter.Fill(dS, cliente);
-            DataBase.conexion.Close();
-            
-            return dS;
-        } */
+            dt.Columns.Add("Producto"); //Se crean las columnas.
+            dt.Columns.Add("Cantidad");
+            dt.Columns.Add("Precio");            
+            //dt.Columns.Add("Subtotal");
+            //dt.Columns.Add("IVA");
+            dt.Columns.Add("Total");
+            dataGridView1.DataSource = dt;
+        }
 
+        private void btn500_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                double num1 = 0;
+                double num2 = 0;
+                double total = 0;                
+                double cambio = 0;
+                double subtotal = 0;
 
+                num1 = Double.Parse(textBoxPrecio.Text);
+                num2 = Double.Parse(textBoxCantidad.Text);
+                
+                subtotal = num1 * num2;
+                total = subtotal * 1.16;
+                cambio = 500 - total;
 
+                textBoxIva.Text = Convert.ToDouble(subtotal * 0.16).ToString();
+                textBoxSubtotal.Text = Convert.ToDouble(subtotal).ToString();
+                textBoxTotal.Text = Convert.ToDouble(total).ToString();
+                textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
+            }
+            catch (Exception ex) { }
+        }
+
+        private void btn200_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                double num1 = 0;
+                double num2 = 0;
+                double total = 0;
+                double cambio = 0;
+                double subtotal = 0;
+
+                num1 = Double.Parse(textBoxPrecio.Text);
+                num2 = Double.Parse(textBoxCantidad.Text);
+
+                subtotal = num1 * num2;
+                total = subtotal * 1.16;
+                cambio = 200 - total;
+
+                textBoxIva.Text = Convert.ToDouble(subtotal * 0.16).ToString();
+                textBoxSubtotal.Text = Convert.ToDouble(subtotal).ToString();
+                textBoxTotal.Text = Convert.ToDouble(total).ToString();
+                textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
+            }
+            catch (Exception ex) { }
+        }
+
+        private void btn100_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                double num1 = 0;
+                double num2 = 0;
+                double total = 0;
+                double cambio = 0;
+                double subtotal = 0;
+
+                num1 = Double.Parse(textBoxPrecio.Text);
+                num2 = Double.Parse(textBoxCantidad.Text);
+
+                subtotal = num1 * num2;
+                total = subtotal * 1.16;
+                cambio = 100 - total;
+
+                textBoxIva.Text = Convert.ToDouble(subtotal * 0.16).ToString();
+                textBoxSubtotal.Text = Convert.ToDouble(subtotal).ToString();
+                textBoxTotal.Text = Convert.ToDouble(total).ToString();
+                textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
+            }
+            catch (Exception ex) { }
+        }
+
+        private void btn50_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                double num1 = 0;
+                double num2 = 0;
+                double total = 0;
+                double cambio = 0;
+                double subtotal = 0;
+
+                num1 = Double.Parse(textBoxPrecio.Text);
+                num2 = Double.Parse(textBoxCantidad.Text);
+
+                subtotal = num1 * num2;
+                total = subtotal * 1.16;
+                cambio = 50 - total;
+
+                textBoxIva.Text = Convert.ToDouble(subtotal * 0.16).ToString();
+                textBoxSubtotal.Text = Convert.ToDouble(subtotal).ToString();
+                textBoxTotal.Text = Convert.ToDouble(total).ToString();
+                textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
+            }
+            catch (Exception ex) { }
+        }
+
+        private void btn20_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                double num1 = 0;
+                double num2 = 0;
+                double total = 0;
+                double cambio = 0;
+                double subtotal = 0;
+
+                num1 = Double.Parse(textBoxPrecio.Text);
+                num2 = Double.Parse(textBoxCantidad.Text);
+
+                subtotal = num1 * num2;
+                total = subtotal * 1.16;
+                cambio = 20 - total;
+
+                textBoxIva.Text = Convert.ToDouble(subtotal * 0.16).ToString();
+                textBoxSubtotal.Text = Convert.ToDouble(subtotal).ToString();
+                textBoxTotal.Text = Convert.ToDouble(total).ToString();
+                textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
+            }
+            catch (Exception ex) { }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                double num1 = 0;
+                double num2 = 0;
+                double total = 0;
+                double cambio = 0;
+                double subtotal = 0;
+
+                num1 = Double.Parse(textBoxPrecio.Text);
+                num2 = Double.Parse(textBoxCantidad.Text);
+
+                subtotal = num1 * num2;
+                total = subtotal * 1.16;
+                cambio = 10 - total;
+
+                textBoxIva.Text = Convert.ToDouble(subtotal * 0.16).ToString();
+                textBoxSubtotal.Text = Convert.ToDouble(subtotal).ToString();
+                textBoxTotal.Text = Convert.ToDouble(total).ToString();
+                textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
+            }
+            catch (Exception ex) { }
+        }
+
+       
 
 
 
     }
+
     }
