@@ -168,6 +168,7 @@ namespace Examen
             double sumatoriaTotal = 0;
             int counter;
 
+<<<<<<< HEAD
             for (counter = 0; counter < (dataGridView1.Rows.Count); counter++)
             {
                 if (dataGridView1.Rows[counter].Cells["Total"].Value
@@ -183,6 +184,10 @@ namespace Examen
             }
 
             textBoxTotalAPagar.Text = sumatoriaTotal.ToString();
+=======
+
+            textBoxPrecio.Clear();
+>>>>>>> origin/master
             textBoxCantidad.Clear();
             textBoxEfectivo.Clear();
             textBoxCambio.Clear();
