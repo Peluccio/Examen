@@ -67,30 +67,29 @@ namespace Examen
 
             if (textBoxUsuario.Text != "" || textBoxContrasenia.Text != "")
             {
-                //try
-                //{
-                int id = -1;
-                Int32.TryParse(textBoxUsuario.Text, out id);
+                try
+                {
+                    int id = -1;
+                    Int32.TryParse(textBoxUsuario.Text, out id);
 
-                Usuario usuario = new Usuario();
-                usuario.findByIdPass(id, textBoxContrasenia.Text);
-                if (usuario.getId() > 0)
+                    Usuario usuario = new Usuario();
+                    usuario.findByIdPass(id, textBoxContrasenia.Text);
+                    if (usuario.getId() > 0)
+                    {
+                        this.Hide();
+                        MenuPrincipal ventana = new MenuPrincipal();
+                        ventana.ShowDialog();
+                        Dispose();
+                    }
+                    else
+                    {
+                        if (textBoxUsuario.Text == "" || textBoxContrasenia.Text == "") this.setErrorProviders();
+                        else MessageBox.Show("Usuario o contraseña incorrectos", "No existe el usuario", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                } catch (FormatException)
                 {
-                    this.Hide();
-                    MenuPrincipal ventana = new MenuPrincipal();
-                    ventana.ShowDialog();
-                    Dispose();
+                    MessageBox.Show("Usuario o contraseña incorrectos", "No existe el usuario", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                else
-                {
-                    if (textBoxUsuario.Text == "" || textBoxContrasenia.Text == "") this.setErrorProviders();
-                    else MessageBox.Show("Usuario o contraseña incorrectos", "No existe el usuario", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                //}
-                //catch (FormatException)
-                //{
-                //    MessageBox.Show("Usuario o contraseña incorrectos", "No existe el usuario", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //}
             }
             else
             {

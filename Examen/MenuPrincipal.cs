@@ -176,9 +176,8 @@ namespace Examen
             dataGridView1.DataSource = dt; //Se añade la tabla al datagrid.            
             dataGridView1.Update(); //Se actualiza.  
 
-            int result = dataGridView1.Rows.Cast<DataGridViewRow>().Sum(x => Convert.ToInt32(x.Cells["Total"].Value));
-            textBoxTotal.Text = Convert.ToDouble(result).ToString();
-
+            //int result = dataGridView1.Rows.Cast<DataGridViewRow>().Sum(x => Convert.ToInt32(x.Cells["Total"].Value));
+            //textBoxTotal.Text = Convert.ToDouble(result).ToString();
 
             textBoxPrecio.Clear();
             textBoxCantidad.Clear();

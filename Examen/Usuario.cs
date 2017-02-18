@@ -23,6 +23,14 @@ namespace Examen
         private String tipo;
 
         /*
+         * Obtener la instancia del usuario que ingresó 
+         */
+         public  Usuario getInstance()
+        {
+            return this;
+        }
+
+        /*
          * Encuentra a un usuario por su ID
          */
         public Boolean findByIdPass(int id, string pass)
