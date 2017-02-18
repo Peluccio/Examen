@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label10 = new System.Windows.Forms.Label();
             this.textBoxProducto = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnAgregar = new System.Windows.Forms.Button();
@@ -63,6 +64,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.textBoxTotalAPagar = new System.Windows.Forms.TextBox();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -71,6 +73,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.textBoxTotalAPagar);
+            this.tabPage3.Controls.Add(this.label10);
             this.tabPage3.Controls.Add(this.textBoxProducto);
             this.tabPage3.Controls.Add(this.dataGridView1);
             this.tabPage3.Controls.Add(this.btnAgregar);
@@ -108,6 +112,15 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Ventas Mostrador";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(49, 341);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(73, 13);
+            this.label10.TabIndex = 31;
+            this.label10.Text = "Total a pagar:";
             // 
             // textBoxProducto
             // 
@@ -267,6 +280,7 @@
             this.textBoxEfectivo.Name = "textBoxEfectivo";
             this.textBoxEfectivo.Size = new System.Drawing.Size(100, 20);
             this.textBoxEfectivo.TabIndex = 12;
+            this.textBoxEfectivo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxEfectivo_KeyPress);
             // 
             // textBoxCantidad
             // 
@@ -416,6 +430,13 @@
             this.tabControl1.Size = new System.Drawing.Size(773, 430);
             this.tabControl1.TabIndex = 0;
             // 
+            // textBoxTotalAPagar
+            // 
+            this.textBoxTotalAPagar.Location = new System.Drawing.Point(128, 338);
+            this.textBoxTotalAPagar.Name = "textBoxTotalAPagar";
+            this.textBoxTotalAPagar.Size = new System.Drawing.Size(100, 20);
+            this.textBoxTotalAPagar.TabIndex = 32;
+            // 
             // MenuPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -472,5 +493,7 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button btnAgregar;
         private System.Windows.Forms.TextBox textBoxProducto;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox textBoxTotalAPagar;
     }
 }
