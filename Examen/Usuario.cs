@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Examen
 {
-    class Usuario
+    public class Usuario
     {
         // Objeto para conexión
         DataBase db = new DataBase();

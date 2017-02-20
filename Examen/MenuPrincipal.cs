@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,59 +15,46 @@ namespace Examen
 {
     public partial class MenuPrincipal : Form
     {
-        public MenuPrincipal()
+        public MenuPrincipal(Usuario u)
         {
             InitializeComponent();
             textBoxEfectivo.Focus();
             textBoxPrecio.Enabled = false;
-            textBoxSubtotal.Enabled = false;
-            textBoxIva.Enabled = false;
-            textBoxTotal.Enabled = false;
-            textBoxCambio.Enabled = false;
-            textBoxProducto.Enabled = false;
-            textBoxTotalAPagar.Enabled = false;
+            checkBoxTicket.Checked = true;
 
+            textBoxCantidad.Text = "1";
+            textBoxEfectivo.Text = "0";
+            lblFecha.Text = System.DateTime.Now.ToShortDateString();
 
+            // Encontrar id de última venta
+            Venta venta = new Venta();
+            int folio = venta.findLast() + 1;
+            lblFolio.Text = folio.ToString();
+
+            // Set usuario
+            this.usuario = u;
+            lblNomUs.Text = this.usuario.getNombre() + " " + usuario.getApellidos();
+            lblPuestoUs.Text = this.usuario.getTipo();
         }
         //Tabla para el gridView
         DataTable dt = new DataTable();
 
-
-
-        private void button8_Click(object sender, EventArgs e)
-        {
-            textBoxPrecio.Clear();
-            textBoxCantidad.Clear();
-            textBoxEfectivo.Clear();
-            textBoxCambio.Clear();
-            textBoxSubtotal.Clear();
-            textBoxIva.Clear();
-            textBoxTotal.Clear();
-            textBoxProducto.Clear();
-            textBoxTotalAPagar.Clear();
-            textBoxCantidad.Focus();
-
-
-        }
+        // Total de la venta
+        double totalVenta = 0;
+        double subtotalVenta = 0;
+        Venta ventaPrint = new Venta();
+        Usuario usuario = new Usuario();
 
         private void button7_Click(object sender, EventArgs e)
         {
-            Dispose();
-        }
+            DialogResult dr = MessageBox.Show("¿Está seguro de que desea cerrar su sesión? Si no ha cobrado la venta, la información de la misma se perderá.", "Está a punto de cerrar sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-        public DataSet buscarProducto(string consulta, string tabla)
-        {
-            DataBase db = new DataBase();
-            DataSet conjuntoDatos = new DataSet();
-            SqlCommand command = new SqlCommand(consulta, DataBase.conexion);
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            adapter.SelectCommand = command;
-
-            DataBase.conexion.Open();
-            adapter.Fill(conjuntoDatos, tabla);
-            DataBase.conexion.Close();
-
-            return conjuntoDatos;
+            if (dr == DialogResult.Yes)
+            {
+                Dispose();
+                Login ventana = new Login();
+                ventana.ShowDialog();
+            }
         }
 
         private void comboBoxProducto_Click(object sender, EventArgs e)
@@ -74,15 +62,20 @@ namespace Examen
             Producto operaciones = new Producto();
             DataBase db = new DataBase();
             comboBoxProducto.Items.Clear();
+            btnAgregar.Enabled = true;
+
+            if (comboBoxProducto.Text == "") btnAgregar.Enabled = false;
+            else btnAgregar.Enabled = true;
 
             try
             {
-                DataSet ds = new DataSet();
-                ds = buscarProducto("SELECT producto_nombre FROM producto ", "producto");
+                Producto producto = new Producto();
+                DataSet listaProductos = new DataSet();
+                listaProductos = producto.findAll();
 
-                foreach (DataRow fila in ds.Tables["producto"].Rows)
+                foreach (DataRow row in listaProductos.Tables["producto"].Rows)
                 {
-                    comboBoxProducto.Items.Add(fila["producto_nombre"].ToString());
+                    comboBoxProducto.Items.Add(row["producto_nombre"].ToString());
                 }
             }
             catch (SqlException ex)
@@ -99,14 +92,15 @@ namespace Examen
         {
             try
             {
-                DataSet ds = new DataSet();
-                ds = buscarProducto("SELECT producto_precio, producto_nombre FROM producto WHERE producto_nombre ='" + comboBoxProducto.Text + "'", "producto");
+                if (comboBoxProducto.Text == "") btnAgregar.Enabled = false;
+                else btnAgregar.Enabled = true;
 
-                foreach (DataRow row in ds.Tables["producto"].Rows)
+                Producto producto = new Producto();
+                bool productExists = producto.findByName(comboBoxProducto.Text);
+                if(productExists)
                 {
-                    textBoxPrecio.Text = row["producto_precio"].ToString();
-                    textBoxProducto.Text = row["producto_nombre"].ToString();
-
+                    textBoxPrecio.Text = producto.getPrecio().ToString();
+                    textBoxCodigo.Text = producto.getId().ToString();
                 }
 
             }
@@ -117,243 +111,146 @@ namespace Examen
             finally
             {
                 DataBase.conexion.Close();
+                textBoxCantidad.Focus();
             }
         }
 
-        private void btnImprimir_Click(object sender, EventArgs e)
+        private void btnAgregar_Click(object sender, EventArgs e)
         {
+            this.actualizarRegistro();
 
-
-        }
-
-        private void btnVenta_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                double num1 = 0;
-                double num2 = 0;
-                double total = 0;
-                double efectivo = 0;
-                double cambio = 0;
-                double subtotal = 0;
-
-
-                num1 = Double.Parse(textBoxPrecio.Text);
-                num2 = Double.Parse(textBoxCantidad.Text);
-                efectivo = Double.Parse(textBoxEfectivo.Text);
-
-                subtotal = num1 * num2;
-                total = subtotal * 1.16;
-                cambio = efectivo - total;
-
-                textBoxIva.Text = Convert.ToDouble(subtotal * 0.16).ToString();
-                textBoxSubtotal.Text = Convert.ToDouble(subtotal).ToString();
-                textBoxTotal.Text = Convert.ToDouble(total).ToString();
-                textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
-            }
-            catch (Exception ex) { }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            DataRow row = dt.NewRow(); //Creas un regístro.
-            row["Producto"] = textBoxProducto.Text; //Se añade un valor.
-            row["Cantidad"] = textBoxCantidad.Text;
-            row["Precio"] = textBoxPrecio.Text;
-            row["Total"] = textBoxTotal.Text;
-            dt.Rows.Add(row); //Se añade el registro a la tabla.
             dataGridView1.DataSource = dt; //Se añade la tabla al datagrid.            
             dataGridView1.Update(); //Se actualiza.  
 
-            double sumatoriaTotal = 0;
-            int counter;
+            textBoxCantidad.Focus();
+            this.actualizarTicket(false);
+        }
 
-            for (counter = 0; counter < (dataGridView1.Rows.Count); counter++)
+        public void actualizarRegistro()
+        {
+            if (dt.Rows.Count > 0)
             {
-                if (dataGridView1.Rows[counter].Cells["Total"].Value
-                    != null)
+                bool exists = false;
+                foreach (DataRow row in dt.Rows)
                 {
-                    if (dataGridView1.Rows[counter].
-                        Cells["Total"].Value.ToString().Length != 0)
+                    if (row["Producto"].ToString() == comboBoxProducto.Text)
                     {
-                        sumatoriaTotal += double.Parse(dataGridView1.Rows[counter].
-                            Cells["Total"].Value.ToString());
-                    }
+                        exists = true;
+                        // Ya existe el producto en la lista, sumar la cantidad
+                        double rowCantidad = 0; // Convertir cantidad en la fila
+                        Double.TryParse(row["Cantidad"].ToString(), out rowCantidad);
+
+                        double txtCantidad = 0; // Convertir cantidad del textbox
+                        Double.TryParse(textBoxCantidad.Text, out txtCantidad);
+
+                        double rowPrecio = 0; // Convertir el total de la fila
+                        Double.TryParse(row["Precio"].ToString(), out rowPrecio);
+
+                        //Actualizar la cantidad en la lista
+                        row["Cantidad"] = rowCantidad + txtCantidad;
+                        row["Total"] = (rowCantidad + txtCantidad) * rowPrecio;
+
+                        break;
+                    } 
                 }
+                if(!exists)
+                {
+                    this.agregarNuevoRegistro();
+                }
+            } else
+            {
+                this.agregarNuevoRegistro();
+            }
+            
+        }
+
+        public void agregarNuevoRegistro()
+        {
+            // Calcular precio * cantidad
+            double precio = 0, cantidad = 0;
+            Double.TryParse(textBoxPrecio.Text, out precio);
+            Double.TryParse(textBoxCantidad.Text, out cantidad);
+
+            DataRow r = dt.NewRow(); //Creas un regístro.
+            r["Producto"] = comboBoxProducto.Text; //Se añade un valor.
+            r["Cantidad"] = textBoxCantidad.Text;
+            r["Precio"] = textBoxPrecio.Text;
+            r["Total"] = cantidad * precio;
+            r["Codigo"] = textBoxCodigo.Text;
+            dt.Rows.Add(r); //Se añade el registro a la tabla.
+        }
+
+        public void actualizarTicket(bool nuevaVenta)
+        {
+            foreach (DataRow row in dt.Rows)
+            {
+                string sbt = row["Total"].ToString();
+                double s = 0;
+                Double.TryParse(sbt, out s);
+                this.subtotalVenta += s;
             }
 
-            textBoxTotalAPagar.Text = sumatoriaTotal.ToString();
+            // Calcular IVA
+            double iva = this.subtotalVenta * 0.16;
 
+            // Llenar los label del ticket
+            lblSubtotal.Text = "$" + Math.Round(this.subtotalVenta, 2, MidpointRounding.AwayFromZero).ToString();
+            lblIva.Text = "$" + Math.Round(iva, 2, MidpointRounding.AwayFromZero).ToString();
+            lblTotal.Text = "$" + Math.Round(this.subtotalVenta + iva, 2, MidpointRounding.AwayFromZero).ToString();
 
-            textBoxPrecio.Clear();
-            textBoxCantidad.Clear();
-            textBoxEfectivo.Clear();
-            textBoxCambio.Clear();
-            textBoxSubtotal.Clear();
-            textBoxIva.Clear();
-            textBoxProducto.Clear();
-            textBoxCantidad.Focus();
+            if(this.subtotalVenta + iva > 0) btnCobrar.Enabled = true;
+            else btnCobrar.Enabled = false;
+            this.totalVenta = this.subtotalVenta + iva;
+            this.calcularCambio();
+
+            if (nuevaVenta)
+            {
+                // Encontrar id de última venta
+                Venta venta = new Venta();
+                int folio = venta.findLast() + 1;
+                lblFolio.Text = folio.ToString();
+            }
         }
 
         private void MenuPrincipal_Load(object sender, EventArgs e)
         {
             dt.Columns.Add("Producto"); //Se crean las columnas.
             dt.Columns.Add("Cantidad");
-            dt.Columns.Add("Precio");
-            //dt.Columns.Add("Subtotal");
-            //dt.Columns.Add("IVA");
+            dt.Columns.Add("Precio", typeof(double));
             dt.Columns.Add("Total");
+            dt.Columns.Add("Codigo");
             dataGridView1.DataSource = dt;
+            timerHora.Start();
         }
 
         private void btn500_Click(object sender, EventArgs e)
         {
-            try
-            {
-                double num1 = 0;
-                double num2 = 0;
-                double total = 0;
-                double cambio = 0;
-                double subtotal = 0;
-
-                num1 = Double.Parse(textBoxPrecio.Text);
-                num2 = Double.Parse(textBoxCantidad.Text);
-
-                subtotal = num1 * num2;
-                total = subtotal * 1.16;
-                cambio = 500 - total;
-
-                textBoxIva.Text = Convert.ToDouble(subtotal * 0.16).ToString();
-                textBoxSubtotal.Text = Convert.ToDouble(subtotal).ToString();
-                textBoxTotal.Text = Convert.ToDouble(total).ToString();
-                textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
-            }
-            catch (Exception ex) { }
+            textBoxEfectivo.Text = "500";
         }
 
         private void btn200_Click(object sender, EventArgs e)
         {
-            try
-            {
-                double num1 = 0;
-                double num2 = 0;
-                double total = 0;
-                double cambio = 0;
-                double subtotal = 0;
-
-                num1 = Double.Parse(textBoxPrecio.Text);
-                num2 = Double.Parse(textBoxCantidad.Text);
-
-                subtotal = num1 * num2;
-                total = subtotal * 1.16;
-                cambio = 200 - total;
-
-                textBoxIva.Text = Convert.ToDouble(subtotal * 0.16).ToString();
-                textBoxSubtotal.Text = Convert.ToDouble(subtotal).ToString();
-                textBoxTotal.Text = Convert.ToDouble(total).ToString();
-                textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
-            }
-            catch (Exception ex) { }
+            textBoxEfectivo.Text = "200";
         }
 
         private void btn100_Click(object sender, EventArgs e)
         {
-            try
-            {
-                double num1 = 0;
-                double num2 = 0;
-                double total = 0;
-                double cambio = 0;
-                double subtotal = 0;
-
-                num1 = Double.Parse(textBoxPrecio.Text);
-                num2 = Double.Parse(textBoxCantidad.Text);
-
-                subtotal = num1 * num2;
-                total = subtotal * 1.16;
-                cambio = 100 - total;
-
-                textBoxIva.Text = Convert.ToDouble(subtotal * 0.16).ToString();
-                textBoxSubtotal.Text = Convert.ToDouble(subtotal).ToString();
-                textBoxTotal.Text = Convert.ToDouble(total).ToString();
-                textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
-            }
-            catch (Exception ex) { }
+            textBoxEfectivo.Text = "100";
         }
 
         private void btn50_Click(object sender, EventArgs e)
         {
-            try
-            {
-                double num1 = 0;
-                double num2 = 0;
-                double total = 0;
-                double cambio = 0;
-                double subtotal = 0;
-
-                num1 = Double.Parse(textBoxPrecio.Text);
-                num2 = Double.Parse(textBoxCantidad.Text);
-
-                subtotal = num1 * num2;
-                total = subtotal * 1.16;
-                cambio = 50 - total;
-
-                textBoxIva.Text = Convert.ToDouble(subtotal * 0.16).ToString();
-                textBoxSubtotal.Text = Convert.ToDouble(subtotal).ToString();
-                textBoxTotal.Text = Convert.ToDouble(total).ToString();
-                textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
-            }
-            catch (Exception ex) { }
+            textBoxEfectivo.Text = "50";
         }
 
         private void btn20_Click(object sender, EventArgs e)
         {
-            try
-            {
-                double num1 = 0;
-                double num2 = 0;
-                double total = 0;
-                double cambio = 0;
-                double subtotal = 0;
-
-                num1 = Double.Parse(textBoxPrecio.Text);
-                num2 = Double.Parse(textBoxCantidad.Text);
-
-                subtotal = num1 * num2;
-                total = subtotal * 1.16;
-                cambio = 20 - total;
-
-                textBoxIva.Text = Convert.ToDouble(subtotal * 0.16).ToString();
-                textBoxSubtotal.Text = Convert.ToDouble(subtotal).ToString();
-                textBoxTotal.Text = Convert.ToDouble(total).ToString();
-                textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
-            }
-            catch (Exception ex) { }
+            textBoxEfectivo.Text = "20";
         }
 
-        private void button9_Click(object sender, EventArgs e)
+        private void btn1000_Click(object sender, EventArgs e)
         {
-            try
-            {
-                double num1 = 0;
-                double num2 = 0;
-                double total = 0;
-                double cambio = 0;
-                double subtotal = 0;
-
-                num1 = Double.Parse(textBoxPrecio.Text);
-                num2 = Double.Parse(textBoxCantidad.Text);
-
-                subtotal = num1 * num2;
-                total = subtotal * 1.16;
-                cambio = 10 - total;
-
-                textBoxIva.Text = Convert.ToDouble(subtotal * 0.16).ToString();
-                textBoxSubtotal.Text = Convert.ToDouble(subtotal).ToString();
-                textBoxTotal.Text = Convert.ToDouble(total).ToString();
-                textBoxCambio.Text = Convert.ToDouble(cambio).ToString();
-            }
-            catch (Exception ex) { }
+            textBoxEfectivo.Text = "1000";
         }
 
         private void textBoxEfectivo_KeyPress(object sender, KeyPressEventArgs e)
@@ -386,6 +283,174 @@ namespace Examen
             }
         }
 
+        private void textBoxEfectivo_TextChanged(object sender, EventArgs e)
+        {
+            this.calcularCambio();
+        }
+
+        private void calcularCambio()
+        {
+            try
+            {
+                double efRecib = 0;
+
+                Double.TryParse(textBoxEfectivo.Text, System.Globalization.NumberStyles.Any,CultureInfo.GetCultureInfo("en-US"), out efRecib);
+                Console.WriteLine(efRecib);
+
+                double cambio = efRecib - this.totalVenta;
+
+                lblEfRecib.Text = "$" + textBoxEfectivo.Text;
+                lblCambio.Text = "$" + Math.Round(cambio, 2, MidpointRounding.ToEven);
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void timerHora_Tick(object sender, EventArgs e)
+        {
+            string hora = "";
+            if (System.DateTime.Now.Hour < 10) hora += "0" + System.DateTime.Now.Hour.ToString();
+            else hora += System.DateTime.Now.Hour.ToString();
+            hora += ":";
+            if (System.DateTime.Now.Minute < 10) hora += "0" + System.DateTime.Now.Minute.ToString();
+            else hora += System.DateTime.Now.Minute.ToString();
+
+            //lblHora.Text = System.DateTime.Now.Hour.ToString() + ":" + System.DateTime.Now.Minute.ToString();
+            lblHora.Text = hora;
+        }
+
+        private void btnCobrar_Click(object sender, EventArgs e)
+        {
+            double efectivo = 0;
+            Double.TryParse(textBoxEfectivo.Text, out efectivo);
+
+            if(efectivo - this.totalVenta > 0)
+            {
+                // Crear objeto de venta y guardarlo
+                Venta venta = new Venta();
+                venta.setSubtotal(this.subtotalVenta);
+                venta.setTotal(this.totalVenta);
+                /*
+                 *  IMPORTANTE CAMBIAR LINEA DE USUARIO ID
+                 * 
+                 */
+                venta.setUsuarioId(this.usuario.getId());
+                bool result = venta.create();
+
+                Console.WriteLine(result);
+                if(result)
+                {
+                    // Agregar productos a la venta
+                    foreach(DataRow row in dt.Rows)
+                    {
+                        string idString = row["Codigo"].ToString();
+                        string cantString = row["Cantidad"].ToString();
+
+                        venta.addProduct(Convert.ToInt32(idString), Convert.ToDouble(cantString));
+                    }
+
+                    MessageBox.Show("Venta registrada con éxito", "Ventas", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    
+                    if(checkBoxTicket.Checked)
+                    {
+                        this.ventaPrint = venta;
+                        // Generar ticket
+                        printDocument.Print();
+                    }
+
+                    this.clearAll();
+                }
+            } else
+            {
+                MessageBox.Show("La cantidad en efectivo no es suficiente para pagar", "Pago insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void printDocument_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            Font consolas = new Font("Consolas", 10, FontStyle.Regular);
+            Font consolasBold = new Font("Consolas", 10, FontStyle.Bold);
+            Font consolasGrande = new Font("Consolas", 14, FontStyle.Regular);
+
+            string logo = Environment.CurrentDirectory + "\\images\\logo_panaderia12.png";
+            // x y width height
+
+            // Dibujar logo
+            e.Graphics.DrawImage(Image.FromFile(logo), 50, 50, 120, 120);
+
+            // Escribir dirección del negocio
+            e.Graphics.DrawString("Av. Chapultepec No. 4387", consolas, Brushes.Black, 180, 70);
+            e.Graphics.DrawString("Colonia Americana", consolas, Brushes.Black, 180, 90);
+            e.Graphics.DrawString("Guadalajara, Jalisco", consolas, Brushes.Black, 180, 110);
+            e.Graphics.DrawString("Tel: (33) 3614 9800", consolas, Brushes.Black, 180, 130);
+
+            // Información del Ticket
+            e.Graphics.DrawString("Folio: " + ventaPrint.getId().ToString(), consolasGrande, Brushes.Black, 650, 70);
+            e.Graphics.DrawString(System.DateTime.Now.ToShortDateString(), consolas, Brushes.Black, 650, 90);
+            e.Graphics.DrawString("Cantidad", consolasBold, Brushes.Black, 50, 200);
+            e.Graphics.DrawString("Producto", consolasBold, Brushes.Black, 130, 200);
+            e.Graphics.DrawString("Precio unitario", consolasBold, Brushes.Black, 450, 200);
+            e.Graphics.DrawString("Total", consolasBold, Brushes.Black, 600, 200);
+
+            // Obtener productos ligados
+            DataSet list = new DataSet();
+
+            list = ventaPrint.productos();
+
+            /*LISTA DE PRODUCTOS*/
+            int y = 230;
+            foreach(DataRow row in list.Tables["lista_productos"].Rows)
+            {
+                // Procesar cadena de precio
+                string precio1 = row["producto_precio"].ToString().Replace(',', '.');
+                double precio2 = 0;
+                Double.TryParse(precio1, System.Globalization.NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out precio2);
+
+                double cantidad = 0;
+                Double.TryParse(row["cantidad"].ToString(), out cantidad);
+
+                double total = cantidad * precio2;
+
+                e.Graphics.DrawString(row["cantidad"].ToString(), consolas, Brushes.Black, 50, y);
+                e.Graphics.DrawString(row["producto_nombre"].ToString(), consolas, Brushes.Black, 130, y);
+                e.Graphics.DrawString("$" + precio2.ToString(), consolas, Brushes.Black, 450, y);
+                e.Graphics.DrawString("$" + total, consolas, Brushes.Black, 600, y);
+                y += 20;
+            }
+
+            e.Graphics.DrawString("Subtotal: ", consolasBold, Brushes.Black, 500, y + 30);
+            e.Graphics.DrawString("$" + Math.Round(this.subtotalVenta, 2).ToString(), consolas, Brushes.Black, 600, y + 30);
+
+            e.Graphics.DrawString("IVA: ", consolasBold, Brushes.Black, 500, y + 50);
+            double iva = this.subtotalVenta * 0.16;
+            e.Graphics.DrawString("$" + Math.Round(iva, 2).ToString(), consolas, Brushes.Black, 600, y + 50);
+
+            e.Graphics.DrawString("Total: ", consolasBold, Brushes.Black, 500, y + 70);
+            e.Graphics.DrawString("$" + Math.Round(this.totalVenta, 2).ToString(), consolas, Brushes.Black, 600, y + 70);
+
+            e.Graphics.DrawString("Ef. recibido: ", consolasBold, Brushes.Black, 500, y + 90);
+            e.Graphics.DrawString("$" + textBoxEfectivo.Text, consolas, Brushes.Black, 600, y + 90);
+
+            e.Graphics.DrawString("Su cambio: ", consolasBold, Brushes.Black, 500, y + 110);
+            e.Graphics.DrawString(lblCambio.Text, consolas, Brushes.Black, 600, y + 110);
+
+            e.Graphics.DrawString("Gracias por su compra", consolasGrande, Brushes.Black, 300, y + 180);
+            e.Graphics.DrawString("Lo atendió " + this.usuario.getNombre() + " " + this.usuario.getApellidos(), consolas, Brushes.Black, 300, y + 200);
+        }
+
+        /*
+         * Limpiar todo
+         */
+        public void clearAll()
+        {
+            dt.Clear();
+            textBoxEfectivo.Text = "0";
+            this.subtotalVenta = 0;
+            this.totalVenta = 0;
+            this.actualizarTicket(true);
+        }
     }
 
 }

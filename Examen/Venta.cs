@@ -15,8 +15,8 @@ namespace Examen
 
         private int id;
         private String fecha_hora;
-        private float subtotal;
-        private float total;
+        private double subtotal;
+        private double total;
         private int usuario_id;
 
         /*
@@ -49,6 +49,31 @@ namespace Examen
             }
         }
 
+        public int findLast()
+        {
+            int last_id = 0;
+            try
+            {
+                SqlDataReader rows;
+                string query = "SELECT TOP 1 * FROM venta ORDER BY venta_id DESC";
+                rows = db.execute(query);
+
+                
+                if (rows.Read())
+                {
+                    last_id = rows.GetInt32(0);
+                }
+
+                rows.Close();
+                DataBase.conexion.Close();
+                return last_id;
+            }
+            catch (Exception)
+            {
+                return last_id;
+            }
+        }
+
         /*
          * Retorna una lista de Ventas
          */
@@ -62,7 +87,27 @@ namespace Examen
          */
         public Boolean create()
         {
-            return false;
+            try
+            {
+                string subtotal = this.subtotal.ToString().Replace(',', '.');
+                string total = this.total.ToString().Replace(',', '.');
+
+                string query = "INSERT INTO venta (venta_subtotal, venta_total, usuario_id, venta_fecha_hora) " +
+                    "VALUES ("+subtotal+", "+total+", "+this.usuario_id+", '"+ System.DateTime.Now.ToShortDateString() +"')";
+
+                res = db.executeNonQuery(query);
+
+                if (res == 1) {
+                    this.id = this.findLast();
+                    return true;
+                }
+                else return false;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
 
         /*
@@ -84,12 +129,14 @@ namespace Examen
         /*
          * Agrega el producto a la venta
          */
-        public Boolean addProduct(int producto_id)
+        public Boolean addProduct(int producto_id, double producto_cantidad)
         {
             try
             {
+                string cantidad = producto_cantidad.ToString().Replace(',', '.');
+
                 string query = "INSERT INTO venta_producto VALUES (" + this.id + ", "
-                    + producto_id + ", 1)";
+                    + producto_id + ", "+cantidad+")";
 
                 res = db.executeNonQuery(query);
 
@@ -98,6 +145,7 @@ namespace Examen
             }
             catch (SqlException ex)
             {
+                Console.WriteLine(ex.Message);
                 return false;
             }
             finally
@@ -121,22 +169,22 @@ namespace Examen
             this.fecha_hora = fecha_hora;
         }
 
-        public float getSubtotal()
+        public double getSubtotal()
         {
             return this.subtotal;
         }
 
-        public void setSubtotal(float subtotal)
+        public void setSubtotal(double subtotal)
         {
             this.subtotal = subtotal;
         }
 
-        public float getTotal()
+        public double getTotal()
         {
             return this.total;
         }
 
-        public void setTotal(float total)
+        public void setTotal(double total)
         {
             this.total = total;
         }

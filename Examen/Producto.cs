@@ -16,7 +16,7 @@ namespace Examen
         private int id;
         private String nombre;
         private String descripcion;
-        private float precio;
+        private decimal precio;
 
 
         /*
@@ -35,13 +35,39 @@ namespace Examen
                     this.id = rows.GetInt32(0);
                     this.nombre = rows.GetString(1).ToString();
                     this.descripcion = rows.GetString(2).ToString();
-                    this.precio = rows.GetFloat(3);
+                    this.precio = Math.Round(rows.GetDecimal(3), 2);
                 }
 
                 rows.Close();
                 DataBase.conexion.Close();
                 return true;
             } catch(Exception)
+            {
+                return false;
+            }
+        }
+
+        public Boolean findByName(string nombre)
+        {
+            try
+            {
+                SqlDataReader rows;
+                string query = "SELECT * FROM producto WHERE producto_nombre = '" + nombre + "'";
+                rows = db.execute(query);
+
+                if (rows.Read())
+                {
+                    this.id = rows.GetInt32(0);
+                    this.nombre = rows.GetString(1).ToString();
+                    this.descripcion = rows.GetString(2).ToString();
+                    this.precio = Math.Round(rows.GetDecimal(3), 2);
+                }
+
+                rows.Close();
+                DataBase.conexion.Close();
+                return true;
+            }
+            catch (Exception)
             {
                 return false;
             }
@@ -120,12 +146,12 @@ namespace Examen
             this.descripcion = descripcion;
         }
 
-        public float getPrecio()
+        public decimal getPrecio()
         {
             return this.precio;
         }
 
-        public void setPrecio(float precio)
+        public void setPrecio(decimal precio)
         {
             this.precio = precio;
         }

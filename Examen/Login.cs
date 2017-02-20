@@ -77,7 +77,7 @@ namespace Examen
                     if (usuario.getId() > 0)
                     {
                         this.Hide();
-                        MenuPrincipal ventana = new MenuPrincipal();
+                        MenuPrincipal ventana = new MenuPrincipal(usuario);
                         ventana.ShowDialog();
                         Dispose();
                     }
