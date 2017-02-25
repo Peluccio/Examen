@@ -35,6 +35,12 @@ namespace Examen
             this.usuario = u;
             lblNomUs.Text = this.usuario.getNombre() + " " + usuario.getApellidos();
             lblPuestoUs.Text = this.usuario.getTipo();
+            if (this.usuario.getTipo() == "v")
+            {
+                tabControl1.Controls.Remove(tabPage1);
+                tabControl1.Controls.Remove(tabPage2);
+            }
+
         }
         //Tabla para el gridView
         DataTable dt = new DataTable();
@@ -187,7 +193,7 @@ namespace Examen
                 string sbt = row["Total"].ToString();
                 double s = 0;
                 Double.TryParse(sbt, out s);
-                this.subtotalVenta += s;
+                this.subtotalVenta = s;
             }
 
             // Calcular IVA
