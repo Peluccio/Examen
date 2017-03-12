@@ -209,6 +209,20 @@ namespace Examen
             return list;
         }
 
+        public DataSet consultarVenta(string consulta, string tabla)
+        {
+            DataSet ds = new DataSet();
+            SqlCommand sqlcmd = new SqlCommand(consulta, DataBase.conexion);
+
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = sqlcmd;
+            DataBase.conexion.Open();
+            adapter.Fill(ds, tabla);
+            DataBase.conexion.Close();
+
+            return ds;
+        }
+
 
 
     }

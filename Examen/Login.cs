@@ -16,6 +16,7 @@ namespace Examen
         public Login()
         {
             InitializeComponent();
+            this.textBoxUsuario.Focus();
 
             //
             Thread hilo = new Thread(mostrarSplash);
@@ -52,12 +53,12 @@ namespace Examen
 
         private void textBoxUsuario_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.Enter) textBoxContrasenia.Focus();
+            if(e.KeyValue == (char)Keys.Enter) textBoxContrasenia.Focus();
         }
 
         private void textBoxContrasenia_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter) this.validarIngreso();
+            if (e.KeyValue == (char)Keys.Enter) this.validarIngreso();
         }
 
         private void validarIngreso()

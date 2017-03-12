@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsProducto2" targetNamespace="http://tempuri.org/dsProducto2.xsd" xmlns:mstns="http://tempuri.org/dsProducto2.xsd" xmlns="http://tempuri.org/dsProducto2.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsProducto2" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsProducto2" msprop:Generator_UserDSName="dsProducto2">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dtProductoPromedio" msprop:Generator_TableClassName="dtProductoPromedioDataTable" msprop:Generator_TableVarName="tabledtProductoPromedio" msprop:Generator_TablePropName="dtProductoPromedio" msprop:Generator_RowDeletingName="dtProductoPromedioRowDeleting" msprop:Generator_RowChangingName="dtProductoPromedioRowChanging" msprop:Generator_RowEvHandlerName="dtProductoPromedioRowChangeEventHandler" msprop:Generator_RowDeletedName="dtProductoPromedioRowDeleted" msprop:Generator_UserTableName="dtProductoPromedio" msprop:Generator_RowChangedName="dtProductoPromedioRowChanged" msprop:Generator_RowEvArgName="dtProductoPromedioRowChangeEvent" msprop:Generator_RowClassName="dtProductoPromedioRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="venta_id" msprop:Generator_ColumnVarNameInTable="columnventa_id" msprop:Generator_ColumnPropNameInRow="venta_id" msprop:Generator_ColumnPropNameInTable="venta_idColumn" msprop:Generator_UserColumnName="venta_id" type="xs:string" minOccurs="0" />
+              <xs:element name="venta_subtotal" msprop:Generator_ColumnVarNameInTable="columnventa_subtotal" msprop:Generator_ColumnPropNameInRow="venta_subtotal" msprop:Generator_ColumnPropNameInTable="venta_subtotalColumn" msprop:Generator_UserColumnName="venta_subtotal" type="xs:string" minOccurs="0" />
+              <xs:element name="venta_total" msprop:Generator_ColumnVarNameInTable="columnventa_total" msprop:Generator_ColumnPropNameInRow="venta_total" msprop:Generator_ColumnPropNameInTable="venta_totalColumn" msprop:Generator_UserColumnName="venta_total" type="xs:string" minOccurs="0" />
+              <xs:element name="usuario_id" msprop:Generator_ColumnVarNameInTable="columnusuario_id" msprop:Generator_ColumnPropNameInRow="usuario_id" msprop:Generator_ColumnPropNameInTable="usuario_idColumn" msprop:Generator_UserColumnName="usuario_id" type="xs:string" minOccurs="0" />
+              <xs:element name="venta_fecha_hora" msprop:Generator_ColumnVarNameInTable="columnventa_fecha_hora" msprop:Generator_ColumnPropNameInRow="venta_fecha_hora" msprop:Generator_ColumnPropNameInTable="venta_fecha_horaColumn" msprop:Generator_UserColumnName="venta_fecha_hora" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
