@@ -35,6 +35,12 @@ namespace Examen
             this.usuario = u;
             lblNomUs.Text = this.usuario.getNombre() + " " + usuario.getApellidos();
             lblPuestoUs.Text = this.usuario.getTipo();
+            if (this.usuario.getTipo() == "v")
+            {
+                tabControl1.Controls.Remove(tabPage1);
+                tabControl1.Controls.Remove(tabPage2);
+            }
+
         }
         //Tabla para el gridView
         DataTable dt = new DataTable();
@@ -187,7 +193,7 @@ namespace Examen
                 string sbt = row["Total"].ToString();
                 double s = 0;
                 Double.TryParse(sbt, out s);
-                this.subtotalVenta += s;
+                this.subtotalVenta = s;
             }
 
             // Calcular IVA
@@ -450,6 +456,93 @@ namespace Examen
             this.subtotalVenta = 0;
             this.totalVenta = 0;
             this.actualizarTicket(true);
+        }
+
+        private void btnReporte1_Click(object sender, EventArgs e)
+        {
+            Producto obj = new Producto();
+            dsProducto1 dsProducto = new dsProducto1();
+
+            try
+            {
+                DataSet ds, ds2 = new DataSet();
+                ds = obj.consultar("SELECT * FROM producto ORDER BY producto_precio DESC", "producto");
+
+                if (ds.Tables[0].Rows.Count == 0)
+                {
+                    MessageBox.Show
+                        ("No se encontró...", "Búsqueda", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    foreach (DataRow row in ds.Tables["producto"].Rows)
+                    {
+                        dsProducto.dtProducto1.Rows.Add(
+                            row["producto_id"].ToString(),
+                            row["producto_nombre"].ToString(),
+                            row["producto_descripcion"].ToString(),
+                            row["producto_precio"].ToString(),
+                            row["producto_activo"].ToString()
+                            );
+                    }
+  
+                }
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                DataBase.conexion.Close();
+            }
+            Reporte rep = new Reporte(dsProducto.dtProducto1);
+            rep.ShowDialog();
+            
+
+        }
+
+        private void btnReporte2_Click(object sender, EventArgs e)
+        {
+            Venta obj = new Venta();
+            dsProducto2 dsVenta = new dsProducto2();
+
+            try
+            {
+                DataSet ds = new DataSet();
+                ds = obj.consultarVenta("SELECT * FROM venta", "venta");
+
+                if (ds.Tables[0].Rows.Count == 0)
+                {
+                    MessageBox.Show
+                        ("No se encontró...", "Búsqueda", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    foreach (DataRow row in ds.Tables["venta"].Rows)
+                    {
+                        dsVenta.dtProductoPromedio.Rows.Add(
+                            row["venta_id"].ToString(),
+                            row["venta_subtotal"].ToString(),
+                            row["venta_total"].ToString(),
+                            row["usuario_id"].ToString(),
+                            row["venta_fecha_hora"].ToString()
+                            );
+                    }
+
+                }
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                DataBase.conexion.Close();
+            }
+            ReportePromedio rep = new ReportePromedio(dsVenta.dtProductoPromedio);
+            rep.ShowDialog();
+
         }
     }
 

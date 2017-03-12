@@ -70,6 +70,10 @@
             this.comboBoxProducto = new System.Windows.Forms.ComboBox();
             this.btnSalir = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.btnReporte2 = new System.Windows.Forms.Button();
+            this.btnReporte1 = new System.Windows.Forms.Button();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.userPic = new System.Windows.Forms.PictureBox();
@@ -86,6 +90,12 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.tabControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.userPic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -558,6 +568,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.splitContainer1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -565,6 +576,65 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Reportes";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.splitContainer1.Panel1.Controls.Add(this.btnReporte2);
+            this.splitContainer1.Panel1.Controls.Add(this.btnReporte1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.BackColor = System.Drawing.Color.Gainsboro;
+            this.splitContainer1.Panel2.Controls.Add(this.pictureBox2);
+            this.splitContainer1.Size = new System.Drawing.Size(885, 433);
+            this.splitContainer1.SplitterDistance = 295;
+            this.splitContainer1.TabIndex = 0;
+            // 
+            // btnReporte2
+            // 
+            this.btnReporte2.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.btnReporte2.FlatAppearance.BorderColor = System.Drawing.Color.RoyalBlue;
+            this.btnReporte2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReporte2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReporte2.ForeColor = System.Drawing.SystemColors.Info;
+            this.btnReporte2.Location = new System.Drawing.Point(73, 198);
+            this.btnReporte2.Name = "btnReporte2";
+            this.btnReporte2.Size = new System.Drawing.Size(155, 57);
+            this.btnReporte2.TabIndex = 1;
+            this.btnReporte2.Text = "Reporte producto más vendido";
+            this.btnReporte2.UseVisualStyleBackColor = false;
+            this.btnReporte2.Click += new System.EventHandler(this.btnReporte2_Click);
+            // 
+            // btnReporte1
+            // 
+            this.btnReporte1.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.btnReporte1.FlatAppearance.BorderColor = System.Drawing.Color.RoyalBlue;
+            this.btnReporte1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReporte1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReporte1.ForeColor = System.Drawing.SystemColors.Info;
+            this.btnReporte1.Location = new System.Drawing.Point(73, 66);
+            this.btnReporte1.Name = "btnReporte1";
+            this.btnReporte1.Size = new System.Drawing.Size(155, 57);
+            this.btnReporte1.TabIndex = 0;
+            this.btnReporte1.Text = "Reporte de precios";
+            this.btnReporte1.UseVisualStyleBackColor = false;
+            this.btnReporte1.Click += new System.EventHandler(this.btnReporte1_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::Examen.Properties.Resources.n1;
+            this.pictureBox2.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(583, 427);
+            this.pictureBox2.TabIndex = 0;
+            this.pictureBox2.TabStop = false;
             // 
             // tabPage1
             // 
@@ -695,6 +765,12 @@
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.tabControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.userPic)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -755,5 +831,9 @@
         private System.Windows.Forms.TextBox textBoxCodigo;
         private System.Windows.Forms.Label label1;
         private System.Drawing.Printing.PrintDocument printDocument;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Button btnReporte1;
+        private System.Windows.Forms.Button btnReporte2;
+        private System.Windows.Forms.PictureBox pictureBox2;
     }
 }
