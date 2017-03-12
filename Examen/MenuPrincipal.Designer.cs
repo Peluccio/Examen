@@ -478,6 +478,7 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(13, 174);
             this.dataGridView1.Name = "dataGridView1";
@@ -532,6 +533,7 @@
             // 
             // comboBoxProducto
             // 
+            this.comboBoxProducto.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxProducto.FormattingEnabled = true;
             this.comboBoxProducto.Location = new System.Drawing.Point(6, 19);
             this.comboBoxProducto.Name = "comboBoxProducto";
