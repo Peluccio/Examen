@@ -47,8 +47,11 @@ namespace Examen
             cmbTipo.SelectedIndex = 0;
         }
 
-        //Tabla para el gridView
+        //Tabla para el gridView de productos
         DataTable dt = new DataTable();
+
+        //Tabla para el gridView de usuarios
+        DataTable dtUsuarios = new DataTable();
 
         // Total de la venta
         double totalVenta = 0;
@@ -232,6 +235,18 @@ namespace Examen
             dt.Columns.Add("Codigo");
             dataGridView1.DataSource = dt;
             timerHora.Start();
+
+            // Crear columnas para DataGrid de usuarios
+            dtUsuarios.Columns.Add("Código (ID)");
+            dtUsuarios.Columns.Add("Nombre");
+            dtUsuarios.Columns.Add("Apellidos");
+            dtUsuarios.Columns.Add("RFC");
+            dtUsuarios.Columns.Add("Dirección");
+            dtUsuarios.Columns.Add("Ciudad");
+            dtUsuarios.Columns.Add("Teléfono");
+            dtUsuarios.Columns.Add("Tipo");
+            dtUsuarios.Columns.Add("Contraseña");
+            dgUsuarios.DataSource = dtUsuarios;
         }
 
         private void btn500_Click(object sender, EventArgs e)
@@ -552,20 +567,141 @@ namespace Examen
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            Console.WriteLine(txtCodigo.Text == "");
-            Usuario u = new Usuario();
-            u.setNombre(txtNombre.Text);
-            u.setApellidos(txtNombre.Text);
-            u.setRFC(txtNombre.Text);
-            u.setDireccion(txtNombre.Text);
-            u.setCiudad(txtNombre.Text);
-            u.setTelefono(txtNombre.Text);
-            u.setContrasena(txtNombre.Text);
-            u.setTipo(cmbTipo.Text);
-            bool result = u.save("insert");
+            // Guarda el resultado de insertar o modificar valores
+            bool result = false;
 
-            if (result) MessageBox.Show("El código generado para el usuario registrado es: 0000000", "Guardado con éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            else MessageBox.Show("No fue posible guardar los cambios, por favor contacte al administrador.", "Error al guardar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            // Checar que los campos estén llenos y que las contraseñas sean las mismas
+            if (this.checkFormValues() && this.checkPasswords())
+            {
+                Usuario u = new Usuario();
+                u.setNombre(txtNombre.Text);
+                u.setApellidos(txtApellidos.Text);
+                u.setRFC(txtRFC.Text);
+                u.setDireccion(txtDireccion.Text);
+                u.setCiudad(txtCiudad.Text);
+                u.setTelefono(txtTel.Text);
+                u.setContrasena(txtContrasena1.Text);
+                u.setTipo(cmbTipo.Text);
+
+                // Si el código está vacío, es un nuevo usuario
+                if (txtCodigo.Text == "")
+                {
+                    result = u.save("insert");
+
+                    // Valida la respuesta SQL
+                    if (result)
+                    {
+                        MessageBox.Show("El código generado para el usuario registrado es: 0000000", "Guardado con éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.clearForm();
+                    }
+                    else MessageBox.Show("No fue posible registrar los datos, por favor contacte al administrador.", "Error al guardar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+
+                    result = u.save("update", Int32.Parse(txtCodigo.Text));
+
+                    // Valida la respuesta SQL
+                    if (result) MessageBox.Show("Los datos del usuario se modificaron correctamente", "Guardado con éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    else MessageBox.Show("No fue posible guardar los cambios, por favor contacte al administrador.", "Error al guardar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+            }
+            
+        }
+
+        /*
+         * Valida que los campos del formulario estén llenos
+         */ 
+        private bool checkFormValues()
+        {
+            if (txtNombre.Text == "" ||
+               txtApellidos.Text == "" ||
+               txtRFC.Text == "" ||
+               txtDireccion.Text == "" ||
+               txtCiudad.Text == "" ||
+               txtTel.Text == "" ||
+               txtContrasena1.Text == "" ||
+               txtContrasena2.Text == "")
+            {
+                MessageBox.Show("Asegúrese de llenar todos los campos.", "Falta información", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
+            }
+            else return true;
+        }
+
+        private bool checkPasswords()
+        {
+            if(txtContrasena1.Text == txtContrasena2.Text)
+            {
+                return true;
+            } else
+            {
+                txtContrasena2.Text = "";
+                txtContrasena2.Focus();
+                MessageBox.Show("Asegúrese que las contraseñas sean las mismas.", "Las contraseñas no son iguales", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
+            }
+        }
+
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            // Limpiar DataTable
+            dtUsuarios.Clear();
+
+            // Crear objeto y buscar usuarios
+            Usuario listU = new Usuario();
+            DataSet dsUsuarios = listU.findByApellido(txtBuscar.Text);
+
+            foreach(DataRow r in dsUsuarios.Tables["usuario"].Rows)
+            {
+                // Agregar fila a la tabla
+                DataRow r2 = dtUsuarios.NewRow();
+                r2["Código (ID)"] = r["usuario_id"].ToString();
+                r2["Nombre"] = r["usuario_nombre"].ToString();
+                r2["Apellidos"] = r["usuario_apellidos"].ToString();
+                r2["RFC"] = r["usuario_rfc"].ToString();
+                r2["Dirección"] = r["usuario_direccion"].ToString();
+                r2["Ciudad"] = r["usuario_ciudad"].ToString();
+                r2["Teléfono"] = r["usuario_telefono"].ToString();
+                r2["Tipo"] = r["usuario_tipo"].ToString();
+                r2["Contraseña"] = r["usuario_contrasena"].ToString();
+                dtUsuarios.Rows.Add(r2);
+            }
+            dgUsuarios.Update();
+        }
+
+        private void clearForm()
+        {
+            txtCodigo.Clear();
+            txtNombre.Clear();
+            txtApellidos.Clear();
+            txtCiudad.Clear();
+            txtDireccion.Clear();
+            txtTel.Clear();
+            txtRFC.Clear();
+            txtContrasena1.Clear();
+            txtContrasena2.Clear();
+        }
+
+        private void dgUsuarios_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            // LLenar formulario con usuario seleccionado
+            txtCodigo.Text = dtUsuarios.Rows[e.RowIndex][0].ToString();
+            txtNombre.Text = dtUsuarios.Rows[e.RowIndex][1].ToString();
+            txtApellidos.Text = dtUsuarios.Rows[e.RowIndex][2].ToString();
+            txtRFC.Text = dtUsuarios.Rows[e.RowIndex][3].ToString();
+            txtDireccion.Text = dtUsuarios.Rows[e.RowIndex][4].ToString();
+            txtCiudad.Text = dtUsuarios.Rows[e.RowIndex][5].ToString();
+            txtTel.Text = dtUsuarios.Rows[e.RowIndex][6].ToString();
+            cmbTipo.Text = dtUsuarios.Rows[e.RowIndex][7].ToString();
+            txtContrasena1.Text = dtUsuarios.Rows[e.RowIndex][8].ToString();
+            txtContrasena2.Text = dtUsuarios.Rows[e.RowIndex][8].ToString();
+        }
+
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            this.clearForm();
         }
     }
 

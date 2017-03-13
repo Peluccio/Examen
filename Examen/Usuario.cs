@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -70,7 +71,7 @@ namespace Examen
         /*
          * Guarda al usuario en la base de datos
          */
-        public Boolean save(string type)
+        public Boolean save(string type, int id = 0)
         {
             try
             {
@@ -91,7 +92,7 @@ namespace Examen
                         "usuario_telefono = '" + this.telefono + "', " +
                         "usuario_tipo = '" + this.tipo + "', " +
                         "usuario_contrasena = '" + this.contrasena + "', " +
-                        "usuario_activo = '" + this.activo + "' WHERE usuario_id = "+this.id;
+                        "usuario_activo = '" + 1 + "' WHERE usuario_id = "+id;
                 }
 
                 res = db.executeNonQuery(query);
@@ -115,6 +116,16 @@ namespace Examen
         public void findAll()
         {
 
+        }
+
+        /*
+         * Encuentra a los usuarios por apellido
+         */
+        public DataSet findByApellido(string apellido)
+        {
+            DataSet list = new DataSet();
+            list = db.getList("SELECT * FROM usuario WHERE usuario_apellidos LIKE '%"+apellido+"%'", "usuario");
+            return list;
         }
 
         /*

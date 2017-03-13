@@ -75,10 +75,10 @@
             this.btnReporte1 = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.dgUsuarios = new System.Windows.Forms.DataGridView();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.textBox10 = new System.Windows.Forms.TextBox();
+            this.btnBuscar = new System.Windows.Forms.Button();
+            this.txtBuscar = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.btnLimpiar = new System.Windows.Forms.Button();
@@ -125,7 +125,7 @@
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgUsuarios)).BeginInit();
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -670,7 +670,7 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.dataGridView2);
+            this.tabPage1.Controls.Add(this.dgUsuarios);
             this.tabPage1.Controls.Add(this.groupBox6);
             this.tabPage1.Controls.Add(this.groupBox5);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -681,19 +681,20 @@
             this.tabPage1.Text = "Usuarios";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // dataGridView2
+            // dgUsuarios
             // 
-            this.dataGridView2.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(21, 94);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(429, 327);
-            this.dataGridView2.TabIndex = 2;
+            this.dgUsuarios.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dgUsuarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgUsuarios.Location = new System.Drawing.Point(21, 94);
+            this.dgUsuarios.Name = "dgUsuarios";
+            this.dgUsuarios.Size = new System.Drawing.Size(429, 327);
+            this.dgUsuarios.TabIndex = 2;
+            this.dgUsuarios.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgUsuarios_RowEnter);
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.button3);
-            this.groupBox6.Controls.Add(this.textBox10);
+            this.groupBox6.Controls.Add(this.btnBuscar);
+            this.groupBox6.Controls.Add(this.txtBuscar);
             this.groupBox6.Controls.Add(this.label16);
             this.groupBox6.Location = new System.Drawing.Point(21, 16);
             this.groupBox6.Name = "groupBox6";
@@ -702,26 +703,27 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Búsqueda";
             // 
-            // button3
+            // btnBuscar
             // 
-            this.button3.BackColor = System.Drawing.Color.PowderBlue;
-            this.button3.FlatAppearance.BorderColor = System.Drawing.Color.MediumAquamarine;
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.Color.Black;
-            this.button3.Location = new System.Drawing.Point(316, 27);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 22;
-            this.button3.Text = "Buscar";
-            this.button3.UseVisualStyleBackColor = false;
+            this.btnBuscar.BackColor = System.Drawing.Color.PowderBlue;
+            this.btnBuscar.FlatAppearance.BorderColor = System.Drawing.Color.MediumAquamarine;
+            this.btnBuscar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBuscar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBuscar.ForeColor = System.Drawing.Color.Black;
+            this.btnBuscar.Location = new System.Drawing.Point(316, 27);
+            this.btnBuscar.Name = "btnBuscar";
+            this.btnBuscar.Size = new System.Drawing.Size(75, 23);
+            this.btnBuscar.TabIndex = 22;
+            this.btnBuscar.Text = "Buscar";
+            this.btnBuscar.UseVisualStyleBackColor = false;
+            this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click);
             // 
-            // textBox10
+            // txtBuscar
             // 
-            this.textBox10.Location = new System.Drawing.Point(85, 29);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(225, 20);
-            this.textBox10.TabIndex = 22;
+            this.txtBuscar.Location = new System.Drawing.Point(85, 29);
+            this.txtBuscar.Name = "txtBuscar";
+            this.txtBuscar.Size = new System.Drawing.Size(225, 20);
+            this.txtBuscar.TabIndex = 22;
             // 
             // label16
             // 
@@ -771,6 +773,7 @@
             this.btnLimpiar.TabIndex = 21;
             this.btnLimpiar.Text = "Limpiar";
             this.btnLimpiar.UseVisualStyleBackColor = true;
+            this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
             // 
             // btnGuardar
             // 
@@ -791,6 +794,7 @@
             // 
             this.txtContrasena2.Location = new System.Drawing.Point(150, 283);
             this.txtContrasena2.Name = "txtContrasena2";
+            this.txtContrasena2.PasswordChar = '*';
             this.txtContrasena2.Size = new System.Drawing.Size(188, 20);
             this.txtContrasena2.TabIndex = 19;
             // 
@@ -798,11 +802,13 @@
             // 
             this.txtContrasena1.Location = new System.Drawing.Point(150, 257);
             this.txtContrasena1.Name = "txtContrasena1";
+            this.txtContrasena1.PasswordChar = '*';
             this.txtContrasena1.Size = new System.Drawing.Size(188, 20);
             this.txtContrasena1.TabIndex = 18;
             // 
             // cmbTipo
             // 
+            this.cmbTipo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTipo.FormattingEnabled = true;
             this.cmbTipo.Location = new System.Drawing.Point(150, 230);
             this.cmbTipo.Name = "cmbTipo";
@@ -1075,7 +1081,7 @@
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.tabPage1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgUsuarios)).EndInit();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             this.groupBox5.ResumeLayout(false);
@@ -1168,9 +1174,9 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button btnLimpiar;
         private System.Windows.Forms.Button btnGuardar;
-        private System.Windows.Forms.DataGridView dataGridView2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.TextBox textBox10;
+        private System.Windows.Forms.DataGridView dgUsuarios;
+        private System.Windows.Forms.Button btnBuscar;
+        private System.Windows.Forms.TextBox txtBuscar;
         private System.Windows.Forms.Label label16;
     }
 }
