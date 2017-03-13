@@ -11,6 +11,7 @@ namespace Examen
     {
         // Objeto para conexión
         DataBase db = new DataBase();
+        int res = -1;
 
         private int id;
         private String nombre;
@@ -21,6 +22,7 @@ namespace Examen
         private String ciudad;
         private String telefono;
         private String tipo;
+        private int activo;
 
         /*
          * Obtener la instancia del usuario que ingresó 
@@ -52,6 +54,7 @@ namespace Examen
                     this.telefono = rows.GetString(6).ToString();
                     this.tipo = rows.GetString(7).ToString();
                     this.contrasena = rows.GetString(8).ToString();
+                    //this.activo = rows.Get(9).ToString();
                 }
 
                 rows.Close();
@@ -60,6 +63,48 @@ namespace Examen
             }
             catch (Exception)
             {
+                return false;
+            }
+        }
+        
+        /*
+         * Guarda al usuario en la base de datos
+         */
+        public Boolean save(string type)
+        {
+            try
+            {
+                string query = "";
+
+                if(type == "insert")
+                {
+                    query = "INSERT INTO usuario (usuario_nombre, usuario_apellidos, usuario_rfc, usuario_direccion, usuario_ciudad, usuario_telefono, usuario_tipo, usuario_contrasena, usuario_activo) " +
+                    "VALUES ('" + this.nombre + "', '" + this.apellidos + "', '" + this.rfc + "', '" + this.direccion + "', '"+this.ciudad+"', '"+this.telefono+"', '"+this.tipo+"', '"+this.contrasena+"', '"+1+"')";
+                } else
+                {
+                    query = "UPDATE usuario SET " +
+                        "usuario_nombre = '" + this.nombre + "', " +
+                        "usuario_apellidos = '" + this.apellidos + "', " +
+                        "usuario_rfc = '" + this.rfc + "', " +
+                        "usuario_direccion = '" + this.direccion + "', " +
+                        "usuario_ciudad = '" + this.ciudad + "'," +
+                        "usuario_telefono = '" + this.telefono + "', " +
+                        "usuario_tipo = '" + this.tipo + "', " +
+                        "usuario_contrasena = '" + this.contrasena + "', " +
+                        "usuario_activo = '" + this.activo + "' WHERE usuario_id = "+this.id;
+                }
+
+                res = db.executeNonQuery(query);
+
+                if (res == 1)
+                {
+                    return true;
+                }
+                else return false;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
                 return false;
             }
         }
@@ -166,12 +211,17 @@ namespace Examen
             return this.tipo;
         }
 
+        public void setTipo(String tipo)
+        {
+            this.tipo = tipo;
+        }
+
         public String getContrasena()
         {
             return this.contrasena;
         }
 
-        public void setContrasena()
+        public void setContrasena(string contrasena)
         {
             this.contrasena = contrasena;
         }

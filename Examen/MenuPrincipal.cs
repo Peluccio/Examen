@@ -41,7 +41,12 @@ namespace Examen
                 tabControl1.Controls.Remove(tabPage2);
             }
 
+            // Llenar el combobox de registro de usuarios
+            cmbTipo.Items.Add("vendedor");
+            cmbTipo.Items.Add("administrador");
+            cmbTipo.SelectedIndex = 0;
         }
+
         //Tabla para el gridView
         DataTable dt = new DataTable();
 
@@ -543,6 +548,24 @@ namespace Examen
             ReportePromedio rep = new ReportePromedio(dsVenta.dtProductoPromedio);
             rep.ShowDialog();
 
+        }
+
+        private void btnGuardar_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine(txtCodigo.Text == "");
+            Usuario u = new Usuario();
+            u.setNombre(txtNombre.Text);
+            u.setApellidos(txtNombre.Text);
+            u.setRFC(txtNombre.Text);
+            u.setDireccion(txtNombre.Text);
+            u.setCiudad(txtNombre.Text);
+            u.setTelefono(txtNombre.Text);
+            u.setContrasena(txtNombre.Text);
+            u.setTipo(cmbTipo.Text);
+            bool result = u.save("insert");
+
+            if (result) MessageBox.Show("El código generado para el usuario registrado es: 0000000", "Guardado con éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else MessageBox.Show("No fue posible guardar los cambios, por favor contacte al administrador.", "Error al guardar", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
