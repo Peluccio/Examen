@@ -526,11 +526,12 @@ namespace Examen
         {
             Venta obj = new Venta();
             dsProducto2 dsVenta = new dsProducto2();
-
+            
             try
             {
-                DataSet ds = new DataSet();
+                DataSet ds, ds2 = new DataSet();
                 ds = obj.consultarVenta("SELECT * FROM venta", "venta");
+                ds2 = obj.consultarVenta("SELECT AVG(venta_total) AS venta_total FROM venta AS v", "venta");
 
                 if (ds.Tables[0].Rows.Count == 0)
                 {
@@ -543,10 +544,20 @@ namespace Examen
                     {
                         dsVenta.dtProductoPromedio.Rows.Add(
                             row["venta_id"].ToString(),
-                            row["venta_subtotal"].ToString(),
-                            row["venta_total"].ToString(),
+                            "$" + row["venta_subtotal"].ToString(),
+                            "$" + row["venta_total"].ToString(),
                             row["usuario_id"].ToString(),
                             row["venta_fecha_hora"].ToString()
+                            );
+                    }
+                    foreach (DataRow row in ds2.Tables["venta"].Rows)
+                    {
+                        dsVenta.dtProductoPromedio.Rows.Add(
+                            //row["venta_id"].ToString(),
+                            //row["venta_subtotal"].ToString(),
+                            "Promedio "  + " $" + row["venta_total"].ToString()
+                            //row["usuario_id"].ToString(),
+                            //row["venta_fecha_hora"].ToString()
                             );
                     }
 
