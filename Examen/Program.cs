@@ -21,7 +21,7 @@ namespace Examen
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MenuPrincipal(u));
+            Application.Run(new Login());
         }
     }
 }

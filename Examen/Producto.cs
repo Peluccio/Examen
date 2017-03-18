@@ -17,6 +17,7 @@ namespace Examen
         private String nombre;
         private String descripcion;
         private decimal precio;
+        private bool activo;
 
 
         /*
