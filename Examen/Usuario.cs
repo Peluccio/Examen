@@ -55,7 +55,7 @@ namespace Examen
                     this.telefono = rows.GetString(6).ToString();
                     this.tipo = rows.GetString(7).ToString();
                     this.contrasena = rows.GetString(8).ToString();
-                    //this.activo = rows.Get(9).ToString();
+                    this.activo = rows.GetInt32(9);
                 }
 
                 rows.Close();
@@ -80,7 +80,7 @@ namespace Examen
                 if(type == "insert")
                 {
                     query = "INSERT INTO usuario (usuario_nombre, usuario_apellidos, usuario_rfc, usuario_direccion, usuario_ciudad, usuario_telefono, usuario_tipo, usuario_contrasena, usuario_activo) " +
-                    "VALUES ('" + this.nombre + "', '" + this.apellidos + "', '" + this.rfc + "', '" + this.direccion + "', '"+this.ciudad+"', '"+this.telefono+"', '"+this.tipo+"', '"+this.contrasena+"', '"+1+"')";
+                    "VALUES ('" + this.nombre + "', '" + this.apellidos + "', '" + this.rfc + "', '" + this.direccion + "', '"+this.ciudad+"', '"+this.telefono+"', '"+this.tipo+"', '"+this.contrasena+"', '"+ this.activo +"')";
                 } else
                 {
                     query = "UPDATE usuario SET " +
@@ -92,7 +92,7 @@ namespace Examen
                         "usuario_telefono = '" + this.telefono + "', " +
                         "usuario_tipo = '" + this.tipo + "', " +
                         "usuario_contrasena = '" + this.contrasena + "', " +
-                        "usuario_activo = '" + 1 + "' WHERE usuario_id = "+id;
+                        "usuario_activo = '" + this.activo + "' WHERE usuario_id = "+id;
                 }
 
                 res = db.executeNonQuery(query);
@@ -113,9 +113,12 @@ namespace Examen
         /*
          * Retorna una lista de Usuarios
          */
-        public void findAll()
+        public DataSet findAll()
         {
-
+            DataSet list = new DataSet();
+            string query = "SELECT * FROM usuario";
+            list = db.getList(query, "usuario");
+            return list;
         }
 
         /*
@@ -126,6 +129,34 @@ namespace Examen
             DataSet list = new DataSet();
             list = db.getList("SELECT * FROM usuario WHERE usuario_apellidos LIKE '%"+apellido+"%'", "usuario");
             return list;
+        }
+
+        /*
+         * Retorna el último apellido
+         */ 
+        public int findLast()
+        {
+            int last_id = 0;
+            try
+            {
+                SqlDataReader rows;
+                string query = "SELECT TOP 1 * FROM usuario ORDER BY usuario_id DESC";
+                rows = db.execute(query);
+
+
+                if (rows.Read())
+                {
+                    last_id = rows.GetInt32(0);
+                }
+
+                rows.Close();
+                DataBase.conexion.Close();
+                return last_id;
+            }
+            catch (Exception)
+            {
+                return last_id;
+            }
         }
 
         /*
@@ -235,6 +266,16 @@ namespace Examen
         public void setContrasena(string contrasena)
         {
             this.contrasena = contrasena;
+        }
+
+        public int getActivo()
+        {
+            return this.activo;
+        }
+
+        public void setActivo(int activo)
+        {
+            this.activo = activo;
         }
 
 

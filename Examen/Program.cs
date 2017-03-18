@@ -16,6 +16,7 @@ namespace Examen
         {
             // Inyectar objeto para motivos de test
             Usuario u = new Usuario();
+           
             u.setNombre("TEST");
             u.setApellidos("test");
 

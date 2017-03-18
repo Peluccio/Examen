@@ -18,10 +18,10 @@ namespace Examen
             InitializeComponent();
             this.textBoxUsuario.Focus();
             
-            Thread hilo = new Thread(mostrarSplash);
-            hilo.Start();
-            Thread.Sleep(2500);
-            hilo.Abort(); 
+            //Thread hilo = new Thread(mostrarSplash);
+            //hilo.Start();
+            //Thread.Sleep(2500);
+            //hilo.Abort(); 
         }
 
         public void mostrarSplash()
@@ -74,7 +74,7 @@ namespace Examen
 
                     Usuario usuario = new Usuario();
                     usuario.findByIdPass(id, textBoxContrasenia.Text);
-                    if (usuario.getId() > 0)
+                    if (usuario.getId() > 0 && usuario.getActivo() == 1) // Valida que el usuario exista y esté activo
                     {
                         this.Hide();
                         MenuPrincipal ventana = new MenuPrincipal(usuario);

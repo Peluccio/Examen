@@ -10,9 +10,9 @@ namespace Examen
 {
     class DataBase
     {
-        //public static SqlConnection conexion = new SqlConnection("Initial Catalog=Panaderia_2; Data Source=DESKTOP-BMDMQMB;Integrated Security=SSPI");
-        public static SqlConnection conexion = new SqlConnection
-            ("Initial Catalog = Panaderia_2; Data Source = Octavio-PC\\SQLEXPRESS; Integrated Security = SSPI;");
+        public static SqlConnection conexion = new SqlConnection("Initial Catalog=Panaderia_2; Data Source=DESKTOP-BMDMQMB;Integrated Security=SSPI");
+        //public static SqlConnection conexion = new SqlConnection
+            //("Initial Catalog = Panaderia_2; Data Source = Octavio-PC\\SQLEXPRESS; Integrated Security = SSPI;");
 
         public SqlDataReader execute(string query)
         {

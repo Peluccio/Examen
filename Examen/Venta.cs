@@ -135,9 +135,8 @@ namespace Examen
             {
                 string cantidad = producto_cantidad.ToString().Replace(',', '.');
 
-                string query = "INSERT INTO venta_producto VALUES (" + this.id + ", "
+                string query = "SET IDENTITY_INSERT venta_producto ON INSERT INTO venta_producto (venta_id, producto_id, cantidad) VALUES (" + this.id + ", "
                     + producto_id + ", "+cantidad+")";
-
                 res = db.executeNonQuery(query);
 
                 if (res == 1) return true;
@@ -205,7 +204,8 @@ namespace Examen
          public DataSet productos()
         {
             DataSet list = new DataSet();
-            list = db.getList("SELECT * FROM lista_productos WHERE venta_id = " + this.id, "lista_productos");
+            string query = "SELECT * FROM lista_productos WHERE venta_id = " + this.id;
+            list = db.getList(query, "lista_productos");
             return list;
         }
 

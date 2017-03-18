@@ -35,16 +35,20 @@ namespace Examen
             this.usuario = u;
             lblNomUs.Text = this.usuario.getNombre() + " " + usuario.getApellidos();
             lblPuestoUs.Text = this.usuario.getTipo();
-            if (this.usuario.getTipo() == "v")
+            if (this.usuario.getTipo() == "vendedor")
             {
                 tabControl1.Controls.Remove(tabPage1);
                 tabControl1.Controls.Remove(tabPage2);
             }
 
-            // Llenar el combobox de registro de usuarios
+            // Llenar el combobox de registro de usuarios y de estado
             cmbTipo.Items.Add("vendedor");
             cmbTipo.Items.Add("administrador");
             cmbTipo.SelectedIndex = 0;
+
+            cmbEstado.Items.Add("activo");
+            cmbEstado.Items.Add("inactivo");
+            cmbEstado.SelectedIndex = 0;
         }
 
         //Tabla para el gridView de productos
@@ -196,25 +200,35 @@ namespace Examen
 
         public void actualizarTicket(bool nuevaVenta)
         {
+            double st = 0; // Variable para acumular el subtotal de la venta
             foreach (DataRow row in dt.Rows)
             {
-                string sbt = row["Total"].ToString();
-                double s = 0;
-                Double.TryParse(sbt, out s);
-                this.subtotalVenta = s;
+                try
+                {
+                    string sbt = row["Total"].ToString();
+                    double s = 0;
+                    Double.TryParse(sbt, out s);
+                    this.subtotalVenta = s;
+                    st += s;
+                } catch(Exception ex)
+                {
+                    // Atrapa la excepción al eliminar una fila
+                }
+                
             }
 
             // Calcular IVA
-            double iva = this.subtotalVenta * 0.16;
+            double iva = st * 0.16;
 
             // Llenar los label del ticket
-            lblSubtotal.Text = "$" + Math.Round(this.subtotalVenta, 2, MidpointRounding.AwayFromZero).ToString();
+            lblSubtotal.Text = "$" + Math.Round(st, 2, MidpointRounding.AwayFromZero).ToString();
             lblIva.Text = "$" + Math.Round(iva, 2, MidpointRounding.AwayFromZero).ToString();
-            lblTotal.Text = "$" + Math.Round(this.subtotalVenta + iva, 2, MidpointRounding.AwayFromZero).ToString();
+            lblTotal.Text = "$" + Math.Round(st + iva, 2, MidpointRounding.AwayFromZero).ToString();
 
             if(this.subtotalVenta + iva > 0) btnCobrar.Enabled = true;
             else btnCobrar.Enabled = false;
-            this.totalVenta = this.subtotalVenta + iva;
+            this.subtotalVenta = st;
+            this.totalVenta = st + iva;
             this.calcularCambio();
 
             if (nuevaVenta)
@@ -246,6 +260,7 @@ namespace Examen
             dtUsuarios.Columns.Add("Teléfono");
             dtUsuarios.Columns.Add("Tipo");
             dtUsuarios.Columns.Add("Contraseña");
+            dtUsuarios.Columns.Add("Estado");
             dgUsuarios.DataSource = dtUsuarios;
         }
 
@@ -325,8 +340,16 @@ namespace Examen
 
                 double cambio = efRecib - this.totalVenta;
 
-                lblEfRecib.Text = "$" + textBoxEfectivo.Text;
-                lblCambio.Text = "$" + Math.Round(cambio, 2, MidpointRounding.ToEven);
+                if(cambio < 0)
+                {
+                    lblEfRecib.Text = "No recibido";
+                    lblCambio.Text = "$0.00";
+                } else
+                {
+                    lblEfRecib.Text = "$" + textBoxEfectivo.Text;
+                    lblCambio.Text = "$" + Math.Round(cambio, 2, MidpointRounding.ToEven);
+                }
+                
             }
             catch (Exception)
             {
@@ -358,10 +381,6 @@ namespace Examen
                 Venta venta = new Venta();
                 venta.setSubtotal(this.subtotalVenta);
                 venta.setTotal(this.totalVenta);
-                /*
-                 *  IMPORTANTE CAMBIAR LINEA DE USUARIO ID
-                 * 
-                 */
                 venta.setUsuarioId(this.usuario.getId());
                 bool result = venta.create();
 
@@ -374,7 +393,8 @@ namespace Examen
                         string idString = row["Codigo"].ToString();
                         string cantString = row["Cantidad"].ToString();
 
-                        venta.addProduct(Convert.ToInt32(idString), Convert.ToDouble(cantString));
+                        bool res = venta.addProduct(Convert.ToInt32(idString), Convert.ToDouble(cantString));
+                        Console.WriteLine(res);
                     }
 
                     MessageBox.Show("Venta registrada con éxito", "Ventas", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
@@ -411,6 +431,7 @@ namespace Examen
             e.Graphics.DrawString("Colonia Americana", consolas, Brushes.Black, 180, 90);
             e.Graphics.DrawString("Guadalajara, Jalisco", consolas, Brushes.Black, 180, 110);
             e.Graphics.DrawString("Tel: (33) 3614 9800", consolas, Brushes.Black, 180, 130);
+            e.Graphics.DrawString("www.panvinadelmar.com", consolas, Brushes.Black, 180, 150);
 
             // Información del Ticket
             e.Graphics.DrawString("Folio: " + ventaPrint.getId().ToString(), consolasGrande, Brushes.Black, 650, 70);
@@ -594,6 +615,9 @@ namespace Examen
                 u.setContrasena(txtContrasena1.Text);
                 u.setTipo(cmbTipo.Text);
 
+                if (cmbEstado.Text == "activo") u.setActivo(1);
+                else u.setActivo(0);
+
                 // Si el código está vacío, es un nuevo usuario
                 if (txtCodigo.Text == "")
                 {
@@ -602,21 +626,22 @@ namespace Examen
                     // Valida la respuesta SQL
                     if (result)
                     {
-                        MessageBox.Show("El código generado para el usuario registrado es: 0000000", "Guardado con éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("El código generado para el usuario registrado es: " + u.findLast().ToString(), "Guardado con éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         this.clearForm();
+                        this.buscar();
                     }
                     else MessageBox.Show("No fue posible registrar los datos, por favor contacte al administrador.", "Error al guardar", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-
                     result = u.save("update", Int32.Parse(txtCodigo.Text));
 
                     // Valida la respuesta SQL
                     if (result) MessageBox.Show("Los datos del usuario se modificaron correctamente", "Guardado con éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     else MessageBox.Show("No fue posible guardar los cambios, por favor contacte al administrador.", "Error al guardar", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
+                // Para actualizar DataGrid
+                this.buscar();
             }
             
         }
@@ -657,29 +682,42 @@ namespace Examen
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            // Limpiar DataTable
-            dtUsuarios.Clear();
+            this.buscar();
+        }
 
-            // Crear objeto y buscar usuarios
-            Usuario listU = new Usuario();
-            DataSet dsUsuarios = listU.findByApellido(txtBuscar.Text);
-
-            foreach(DataRow r in dsUsuarios.Tables["usuario"].Rows)
+        private void buscar()
+        {
+            if(txtBuscar.Text != "")
             {
-                // Agregar fila a la tabla
-                DataRow r2 = dtUsuarios.NewRow();
-                r2["Código (ID)"] = r["usuario_id"].ToString();
-                r2["Nombre"] = r["usuario_nombre"].ToString();
-                r2["Apellidos"] = r["usuario_apellidos"].ToString();
-                r2["RFC"] = r["usuario_rfc"].ToString();
-                r2["Dirección"] = r["usuario_direccion"].ToString();
-                r2["Ciudad"] = r["usuario_ciudad"].ToString();
-                r2["Teléfono"] = r["usuario_telefono"].ToString();
-                r2["Tipo"] = r["usuario_tipo"].ToString();
-                r2["Contraseña"] = r["usuario_contrasena"].ToString();
-                dtUsuarios.Rows.Add(r2);
+                // Limpiar DataTable
+                dtUsuarios.Clear();
+
+                // Crear objeto y buscar usuarios
+                Usuario listU = new Usuario();
+                DataSet dsUsuarios = listU.findByApellido(txtBuscar.Text);
+
+                foreach (DataRow r in dsUsuarios.Tables["usuario"].Rows)
+                {
+                    // Agregar fila a la tabla
+                    DataRow r2 = dtUsuarios.NewRow();
+                    r2["Código (ID)"] = r["usuario_id"].ToString();
+                    r2["Nombre"] = r["usuario_nombre"].ToString();
+                    r2["Apellidos"] = r["usuario_apellidos"].ToString();
+                    r2["RFC"] = r["usuario_rfc"].ToString();
+                    r2["Dirección"] = r["usuario_direccion"].ToString();
+                    r2["Ciudad"] = r["usuario_ciudad"].ToString();
+                    r2["Teléfono"] = r["usuario_telefono"].ToString();
+                    r2["Tipo"] = r["usuario_tipo"].ToString();
+                    r2["Contraseña"] = r["usuario_contrasena"].ToString();
+
+                    if (r["usuario_activo"].ToString() == "1") r2["Estado"] = "Activo";
+                    else r2["Estado"] = "Inactivo";
+
+                    dtUsuarios.Rows.Add(r2);
+                }
+                dgUsuarios.Update();
             }
-            dgUsuarios.Update();
+
         }
 
         private void clearForm()
@@ -693,6 +731,7 @@ namespace Examen
             txtRFC.Clear();
             txtContrasena1.Clear();
             txtContrasena2.Clear();
+            cmbTipo.Text = "vendedor";
         }
 
         private void dgUsuarios_RowEnter(object sender, DataGridViewCellEventArgs e)
@@ -708,11 +747,50 @@ namespace Examen
             cmbTipo.Text = dtUsuarios.Rows[e.RowIndex][7].ToString();
             txtContrasena1.Text = dtUsuarios.Rows[e.RowIndex][8].ToString();
             txtContrasena2.Text = dtUsuarios.Rows[e.RowIndex][8].ToString();
+
+            if (dtUsuarios.Rows[e.RowIndex][9].ToString() == "Activo") cmbEstado.Text = "activo";
+            else cmbEstado.Text = "inactivo";
         }
 
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             this.clearForm();
+        }
+
+        private void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            this.actualizarTicket(false);
+        }
+
+        private void btnVerTodos_Click(object sender, EventArgs e)
+        {
+            // Limpiar DataTable
+            dtUsuarios.Clear();
+
+            // Crear objeto y buscar usuarios
+            Usuario listU = new Usuario();
+            DataSet dsUsuarios = listU.findAll();
+
+            foreach (DataRow r in dsUsuarios.Tables["usuario"].Rows)
+            {
+                // Agregar fila a la tabla
+                DataRow r2 = dtUsuarios.NewRow();
+                r2["Código (ID)"] = r["usuario_id"].ToString();
+                r2["Nombre"] = r["usuario_nombre"].ToString();
+                r2["Apellidos"] = r["usuario_apellidos"].ToString();
+                r2["RFC"] = r["usuario_rfc"].ToString();
+                r2["Dirección"] = r["usuario_direccion"].ToString();
+                r2["Ciudad"] = r["usuario_ciudad"].ToString();
+                r2["Teléfono"] = r["usuario_telefono"].ToString();
+                r2["Tipo"] = r["usuario_tipo"].ToString();
+                r2["Contraseña"] = r["usuario_contrasena"].ToString();
+
+                if (r["usuario_activo"].ToString() == "1") r2["Estado"] = "Activo";
+                else r2["Estado"] = "Inactivo";
+
+                dtUsuarios.Rows.Add(r2);
+            }
+            dgUsuarios.Update();
         }
     }
 
