@@ -18,10 +18,10 @@ namespace Examen
             InitializeComponent();
             this.textBoxUsuario.Focus();
             
-            //Thread hilo = new Thread(mostrarSplash);
-            //hilo.Start();
-            //Thread.Sleep(2500);
-            //hilo.Abort(); 
+            Thread hilo = new Thread(mostrarSplash);
+            hilo.Start();
+            Thread.Sleep(2500);
+            hilo.Abort();
         }
 
         public void mostrarSplash()
@@ -88,7 +88,7 @@ namespace Examen
                     }
                 } catch (FormatException)
                 {
-                    //MessageBox.Show("Usuario o contraseña incorrectos", "No existe el usuario", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Usuario o contraseña incorrectos", "No existe el usuario", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             else
